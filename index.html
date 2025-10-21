@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Respect Style — Loja & App do Aluno</title>
+  <title>Respect Style — Loja & Portal do Aluno</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -17,23 +17,11 @@
       --cta-gradient: linear-gradient(90deg, #e50914, #ff4c4c);
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--white);
-    }
+    html, body { height: 100%; margin:0; font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--white); }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
 
     /* Topbar */
     .topbar {
@@ -47,226 +35,138 @@
       background: rgba(14,14,16,0.7);
       backdrop-filter: blur(8px);
       z-index: 20;
-      transition: background 0.3s ease;
     }
 
-    .topbar:hover {
-      background: rgba(14,14,16,0.85);
-    }
+    .brand { display:flex; gap:12px; align-items:center; }
+    .logo { width:50px; height:50px; border-radius:12px; border:2px solid var(--red); object-fit:cover; transition: transform 0.3s ease; }
+    .logo:hover { transform: scale(1.05); }
+    .brand h1 { margin:0; font-size:22px; }
+    .brand .subtitle { font-size:12px; color:var(--muted); margin-top:2px; }
 
-    .brand {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .logo {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      border: 2px solid var(--red);
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.05);
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .brand .subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .support-btn {
+    .support-btn, .auth-btn {
       color: var(--white);
       text-decoration: none;
       border: 1px solid var(--ring);
       padding: 8px 12px;
       border-radius: 10px;
-      font-weight: 700;
+      font-weight:700;
+      margin-left: 8px;
       transition: all 0.3s ease;
     }
+    .support-btn:hover, .auth-btn:hover { background: var(--red); border-color: var(--red); color: var(--white); }
 
-    .support-btn:hover {
-      background: var(--red);
-      border-color: var(--red);
-      color: var(--white);
-    }
+    /* Main */
+    main { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:30px 20px; }
+    .card { width:min(980px,95vw); background: var(--gradient); border-radius:16px; padding:24px; border:1px solid var(--ring); box-shadow:0 25px 60px rgba(0,0,0,0.5); display:flex; flex-direction:column; gap:20px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .card:hover { transform:translateY(-4px); box-shadow:0 30px 70px rgba(0,0,0,0.55); }
 
-    /* Main content */
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 30px 20px;
-    }
+    header { display:flex; flex-direction:column; gap:8px; }
+    header h1 { margin:0; font-size:24px; font-weight:700; }
+    p.lead { margin:0; font-size:14px; color:var(--muted); line-height:1.5; }
 
-    .card {
-      width: min(980px, 95vw);
-      background: var(--gradient);
-      border-radius: 16px;
-      padding: 24px;
-      border: 1px solid var(--ring);
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 30px 70px rgba(0,0,0,0.55);
-    }
-
-    header {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    p.lead {
-      margin: 0;
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    /* Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .tile {
-      background: #0f1013;
-      border-radius: 14px;
-      padding: 16px;
-      border: 1px solid var(--ring);
-      text-decoration: none;
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-    }
-
-    .tile:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.45);
-      background: linear-gradient(180deg, #1b1b1f, #111112);
-    }
-
-    .tile h2 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .tile p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    .cta {
-      margin-top: auto;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: var(--cta-gradient);
-      color: var(--white);
-      font-weight: 700;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255,0,0,0.5);
-    }
+    /* Grid Tiles */
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:16px; }
+    .tile { background:#0f1013; border-radius:14px; padding:16px; border:1px solid var(--ring); text-decoration:none; color:var(--white); display:flex; flex-direction:column; gap:12px; transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
+    .tile:hover { transform:translateY(-4px); box-shadow:0 15px 35px rgba(0,0,0,0.45); background:linear-gradient(180deg,#1b1b1f,#111112); }
+    .tile h2 { margin:0; font-size:18px; font-weight:600; }
+    .tile p { margin:0; font-size:13px; color:var(--muted); line-height:1.4; }
+    .cta { margin-top:auto; padding:10px 14px; border-radius:12px; background: var(--cta-gradient); color:var(--white); font-weight:700; text-decoration:none; text-align:center; display:inline-block; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .cta:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,0,0,0.5); }
 
     /* Footer */
-    footer {
-      margin-top: 20px;
-      color: #bdbdc6;
-      font-size: 12px;
-      text-align: center;
+    footer { margin-top:20px; color:#bdbdc6; font-size:12px; text-align:center; }
+
+    /* Login/Cadastro Modal */
+    .modal-bg { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); justify-content:center; align-items:center; z-index:50; }
+    .modal { background:var(--card); padding:24px; border-radius:14px; width:min(400px,90%); max-width:400px; display:flex; flex-direction:column; gap:16px; }
+    .modal h2 { margin:0; font-size:20px; text-align:center; }
+    .modal input { padding:10px; border-radius:8px; border:1px solid var(--ring); background:#121213; color:#fff; }
+    .modal button { padding:10px; border-radius:10px; border:none; background:var(--cta-gradient); color:#fff; font-weight:700; cursor:pointer; transition:all 0.3s ease; }
+    .modal button:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(255,0,0,0.5); }
+
+    /* Responsive */
+    @media(max-width:480px){
+      .topbar { flex-direction:column; align-items:flex-start; gap:8px; padding:10px 16px; }
+      .brand h1 { font-size:20px; }
+      main { padding:20px 10px; }
     }
-
-    /* Responsive adjustments */
-    @media(max-width: 480px) {
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        padding: 10px 16px;
-      }
-
-      .brand h1 {
-        font-size: 20px;
-      }
-
-      main {
-        padding: 20px 10px;
-      }
-    }
-
   </style>
 </head>
 <body>
+  <!-- Topbar -->
   <div class="topbar">
     <div class="brand">
       <img src="imagens/logo-respect.png" class="logo" alt="Respect Style Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2550/2550382.png'">
       <div>
         <h1>Respect Style</h1>
-        <div class="subtitle">Loja • App do Aluno</div>
+        <div class="subtitle">Loja • Portal do Aluno</div>
       </div>
     </div>
-    <a href="https://wa.me/5599999999999" target="_blank" rel="noopener" class="support-btn">Suporte</a>
+    <div>
+      <a href="https://wa.me/5599999999999" target="_blank" rel="noopener" class="support-btn">Suporte</a>
+      <a href="#" class="auth-btn" onclick="openModal('login')">Login</a>
+      <a href="#" class="auth-btn" onclick="openModal('cadastro')">Cadastro</a>
+    </div>
   </div>
 
+  <!-- Main Card -->
   <main>
     <div class="card" role="main">
       <header>
-        <h1>Respect Style — Loja & App do Aluno</h1>
-        <p class="lead">Catálogo curado de artigos de Jiu-Jitsu (afiliados + itens em estoque) e área do aluno (horários, avisos e eventos).</p>
+        <h1>Bem-vindo ao Respect Style</h1>
+        <p class="lead">
+          Explore nossa loja de artigos de Jiu-Jitsu, aproveite ofertas exclusivas e acesse sua área de aluno com horários, avisos e eventos.
+        </p>
       </header>
 
+      <!-- Tiles Loja / App -->
       <div class="grid" role="navigation" aria-label="Escolha">
         <a class="tile" href="loja/index.html">
           <h2>🛒 Loja — Respect Style Jiu Jitsu</h2>
-          <p>Catálogo com links de afiliados (Shopee) + seção "Em estoque" para venda direta. Cores: preto / vermelho / branco.</p>
+          <p>Catálogo com links de afiliados (Shopee) e seção "Em estoque" para venda direta.</p>
           <span class="cta">Abrir a Loja</span>
         </a>
 
         <a class="tile" href="academia/index.html">
-          <h2>🥋 App do Aluno — Respect Academy</h2>
-          <p>Horários, comunicados, agenda de treinos e contato da academia. Área do aluno em desenvolvimento.</p>
-          <span class="cta">Entrar no App do Aluno</span>
+          <h2>🥋 Portal do Aluno — Respect Academy</h2>
+          <p>Horários, comunicados, agenda de treinos e contato da academia.</p>
+          <span class="cta">Entrar no Portal</span>
         </a>
       </div>
 
       <footer>© Respect Style — Desenvolvido por equipe-respect</footer>
     </div>
   </main>
+
+  <!-- Modal Login/Cadastro -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal" id="modal">
+      <h2 id="modal-title">Login</h2>
+      <input type="email" placeholder="E-mail" id="email">
+      <input type="password" placeholder="Senha" id="senha">
+      <button onclick="submitAuth()">Enviar</button>
+      <button onclick="closeModal()" style="background:#2a2a2e;">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type){
+      document.getElementById('modal-bg').style.display = 'flex';
+      document.getElementById('modal-title').innerText = type === 'login' ? 'Login' : 'Cadastro';
+    }
+    function closeModal(){
+      document.getElementById('modal-bg').style.display = 'none';
+    }
+    function submitAuth(){
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      if(email && senha){
+        alert("Funcionalidade de autenticação será integrada com Firebase ou backend real.");
+        closeModal();
+      } else {
+        alert("Preencha todos os campos!");
+      }
+    }
+  </script>
 </body>
 </html>
