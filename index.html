@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Respect Style — Loja & App do Aluno</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0e0e10;--card:#151517;--ring:#2a2a2e;--red:#e50914;--white:#fff;--muted:#cfd0d7}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(14,14,16,.6);backdrop-filter:blur(6px);z-index:20}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;border:2px solid var(--red);object-fit:cover}
+    main{display:grid;place-items:center;padding:20px}
+    .card{width:min(980px,96vw);background:linear-gradient(180deg,#17171a,#121213);border-radius:14px;padding:18px;border:1px solid var(--ring);box-shadow:0 20px 50px rgba(0,0,0,.45)}
+    header{display:flex;gap:12px;align-items:center}
+    header h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:14px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    @media(min-width:680px){.grid{grid-template-columns:1fr 1fr}}
+    .tile{background:#0f1013;border-radius:12px;padding:14px;border:1px solid var(--ring);text-decoration:none;color:var(--white);display:flex;flex-direction:column;gap:10px}
+    .tile h2{margin:0;font-size:16px}
+    .tile p{margin:0;color:var(--muted);font-size:13px}
+    .cta{margin-top:8px;padding:10px 12px;border-radius:10px;background:#fff;color:#0b0b0b;font-weight:900;text-decoration:none;display:inline-block}
+    footer{margin-top:14px;color:#bdbdc6;font-size:12px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <img src="imagens/logo-respect.png" class="logo" alt="Respect Style" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2550/2550382.png'">
+      <div>
+        <h1>Respect Style</h1>
+        <div style="font-size:12px;color:var(--muted)">Loja • App do Aluno</div>
+      </div>
+    </div>
+    <div>
+      <a href="https://wa.me/5599999999999" target="_blank" rel="noopener" style="color:var(--white);text-decoration:none;border:1px solid var(--ring);padding:8px 10px;border-radius:10px;font-weight:700">Suporte</a>
+    </div>
+  </div>
+
+  <main>
+    <div class="card" role="main">
+      <header>
+        <div style="flex:1">
+          <h1>Respect Style — Loja & App do Aluno</h1>
+          <p class="lead">Catálogo curado de artigos de Jiu-Jitsu (afiliados + itens em estoque) e área do aluno (horários, avisos e eventos).</p>
+        </div>
+      </header>
+
+      <div class="grid" role="navigation" aria-label="Escolha">
+        <a class="tile" href="loja/index.html">
+          <h2>🛒 Loja — Respect Style Jiu Jitsu</h2>
+          <p>Catálogo com links de afiliados (Shopee) + seção "Em estoque" para venda direta. Cores: preto / vermelho / branco.</p>
+          <span class="cta">Abrir a Loja</span>
+        </a>
+
+        <a class="tile" href="academia/index.html">
+          <h2>🥋 App do Aluno — Respect Academy</h2>
+          <p>Horários, comunicados, agenda de treinos e contato da academia. Área do aluno em desenvolvimento.</p>
+          <span class="cta">Entrar no App do Aluno</span>
+        </a>
+      </div>
+
+      <footer>© Respect Style — Desenvolvido por equipe-respect</footer>
+    </div>
+  </main>
+</body>
+</html>
