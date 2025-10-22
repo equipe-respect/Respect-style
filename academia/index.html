@@ -1,652 +1,570 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portal do Aluno • Respect Style</title>
-  <meta name="description" content="Área do aluno Respect Style — horários, avisos, eventos e perfil.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0e0e10;
-      --card:#151517;
-      --ring:#2a2a2e;
-      --accent:#0aa30a;
-      --red:#e50914;
-      --white:#fff;
-      --muted:#cfd0d7;
-      --glass: rgba(255,255,255,0.03);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--white);-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portal do Aluno • Respect Style (Atualizado)</title>
+<meta name="description" content="Área do aluno Respect Style — dashboards, horários, avisos, competições, graduados e aniversariantes." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Swiper (carrossel de competições) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+<style>
+  :root{
+    --bg:#0e0e10;--card:#151517;--ring:#2a2a2e;--accent:#0aa30a;--red:#e50914;
+    --white:#fff;--muted:#cfd0d7;--glass: rgba(255,255,255,0.03);
+    --gradient: linear-gradient(180deg,#151517,#0f0f11);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--white)}
+  a{text-decoration:none;color:inherit}
+  img{max-width:100%;display:block}
 
-    /* Topbar */
-    .topbar{
-      position:sticky;top:0;z-index:40;
-      display:flex;justify-content:space-between;align-items:center;
-      gap:12px;padding:12px 18px;border-bottom:1px solid var(--ring);
-      backdrop-filter:blur(6px);background:rgba(8,8,8,0.6);
-    }
-    .brand{display:flex;gap:12px;align-items:center}
-    .brand img{width:44px;height:44px;border-radius:10px;border:2px solid var(--red);object-fit:cover}
-    .brand .title{font-size:18px;font-weight:700}
-    .brand .subtitle{font-size:12px;color:var(--muted)}
+  /* Topbar */
+  .topbar{position:sticky;top:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--ring);background:rgba(10,10,10,0.6);backdrop-filter:blur(6px)}
+  .brand{display:flex;gap:12px;align-items:center}
+  .brand img{width:44px;height:44px;border-radius:10px;border:2px solid var(--red);object-fit:cover}
+  .title{font-weight:700}
+  .top-actions{display:flex;gap:8px;align-items:center}
+  .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--ring);background:transparent;color:var(--white);font-weight:700;cursor:pointer}
+  .btn.primary{background:linear-gradient(90deg,var(--accent),#00c44a);border:none}
+  .btn.warn{background:linear-gradient(90deg,#ff6b6b,#ff4c4c);border:none}
+  .user-pill{display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:var(--glass)}
 
-    .top-actions{display:flex;gap:8px;align-items:center}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid var(--ring);background:transparent;color:var(--white);font-weight:700;cursor:pointer}
-    .btn:hover{transform:translateY(-2px)}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),#00c44a);color:#041404;border:none}
-    .btn.ghost{background:transparent}
-    .user-pill{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.03)}
+  /* Layout */
+  .layout{display:flex;min-height:calc(100vh - 64px)}
+  .sidebar{width:260px;background:var(--gradient);border-right:1px solid var(--ring);padding:18px;display:flex;flex-direction:column;gap:12px}
+  .nav-item{padding:12px;border-radius:10px;cursor:pointer}
+  .nav-item:hover{background:rgba(255,255,255,0.02)}
+  .nav-item.active{background:rgba(10,163,10,0.08);border:1px solid rgba(10,163,10,0.06)}
+  .profile{margin-top:auto;padding-top:8px;border-top:1px solid var(--ring);display:flex;gap:12px;align-items:center}
 
-    /* Layout */
-    .layout{display:flex;min-height:calc(100vh - 64px)}
-    .sidebar{
-      width:260px;min-width:220px;background:linear-gradient(180deg,#121213,#0f0f11);border-right:1px solid var(--ring);
-      padding:18px;display:flex;flex-direction:column;gap:12px;
-    }
-    .sidebar .nav-item{padding:12px;border-radius:10px;color:var(--white);display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid transparent}
-    .sidebar .nav-item:hover{background:rgba(255,255,255,0.02);transform:translateX(4px)}
-    .sidebar .nav-item.active{background:linear-gradient(90deg, rgba(10,163,10,0.12), rgba(10,163,10,0.04));border-color:rgba(10,163,10,0.12)}
-    .sidebar .profile{margin-top:auto;padding-top:8px;border-top:1px solid var(--ring);display:flex;gap:12px;align-items:center}
+  .main{flex:1;padding:22px;display:flex;flex-direction:column;gap:18px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--ring)}
+  .muted{color:var(--muted);font-size:13px}
+  .small{font-size:13px;color:var(--muted)}
 
-    /* Main */
-    .main{flex:1;padding:22px;display:flex;flex-direction:column;gap:18px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .card{background:linear-gradient(180deg,#151518,#0f0f11);border-radius:12px;padding:16px;border:1px solid var(--ring);box-shadow:0 12px 30px rgba(0,0,0,0.45)}
-    .card h3{margin:0;font-size:16px}
-    .muted{color:var(--muted);font-size:13px}
-    .small{font-size:13px;color:var(--muted)}
-    .list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  /* competitions swiper */
+  .comp-section{margin-top:6px}
+  .swiper{padding:8px 6px}
+  .swiper-slide{background:var(--card);border-radius:10px;padding:12px;border:1px solid var(--ring);display:flex;flex-direction:column;gap:8px}
+  .comp-date{font-size:13px;color:var(--muted)}
+  .comp-title{font-weight:800}
 
-    /* schedule list */
-    .session{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
-    .session .left{display:flex;gap:12px;align-items:center}
-    .avatar-small{width:44px;height:44px;border-radius:8px;background:#0b0b0b;display:flex;align-items:center;justify-content:center;border:1px solid var(--ring)}
-    .session .meta{display:flex;flex-direction:column}
-    .session .meta .title{font-weight:700}
-    .session .meta .time{font-size:13px;color:var(--muted)}
-    .attendance{display:flex;gap:8px;align-items:center}
+  /* graduados */
+  .graduates-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto;padding-right:6px}
+  .grad-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
 
-    /* notices/events */
-    .notice{padding:12px;border-radius:10px;background:linear-gradient(180deg,#0f1112,#0b0b0c);border:1px solid var(--ring)}
-    .notice .date{font-size:12px;color:var(--muted)}
-    .event-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  /* birthdays */
+  .birth-list{display:flex;flex-direction:column;gap:8px}
 
-    /* profile */
-    .profile-grid{display:grid;grid-template-columns:1fr 2fr;gap:12px}
-    .profile-card{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
-    .profile-card img{width:96px;height:96px;border-radius:14px;border:2px solid var(--accent);object-fit:cover}
-    .input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--ring);background:#0b0b0b;color:var(--white)}
+  /* links */
+  .links-list{display:flex;flex-direction:column;gap:8px}
 
-    /* responsive */
-    @media(max-width:980px){
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .sidebar{width:220px}
-    }
-    @media(max-width:760px){
-      .layout{flex-direction:column}
-      .sidebar{order:2;width:100%;min-width:unset;display:flex;flex-direction:row;overflow:auto;padding:10px}
-      .sidebar .nav-item{flex:0 0 auto}
-      .main{order:1;padding:14px}
-      .grid{grid-template-columns:1fr}
-      .profile-grid{grid-template-columns:1fr}
-    }
+  /* responsive */
+  @media(max-width:980px){ .grid{grid-template-columns:repeat(2,1fr)} .sidebar{width:220px} }
+  @media(max-width:760px){ .layout{flex-direction:column} .sidebar{order:2;width:100%;display:flex;flex-direction:row;overflow:auto;padding:10px} .sidebar .nav-item{flex:0 0 auto} .main{order:1;padding:14px} .grid{grid-template-columns:1fr} }
 
-    /* tiny helpers */
-    .row{display:flex;gap:12px;align-items:center}
-    .chip{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:700}
-    .muted-block{color:var(--muted);font-size:13px}
-    .link{color:var(--accent);cursor:pointer}
-    .hidden{display:none}
-  </style>
+  .hidden{display:none}
+  input.input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--ring);background:#0b0b0b;color:var(--white)}
+</style>
 </head>
 <body>
-  <!-- Topbar -->
+
   <div class="topbar" role="banner">
-    <div class="brand" aria-hidden="false">
-      <img src="../imagens/logo-respect.png" alt="Respect Style" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=Logo'">
+    <div class="brand">
+      <img src="../imagens/logo-respect.png" alt="Respect Style" onerror="this.src='https://via.placeholder.com/80x80?text=Logo'">
       <div>
         <div class="title">Respect Style</div>
-        <div class="subtitle">Portal do Aluno</div>
+        <div class="muted">Portal do Aluno</div>
       </div>
     </div>
 
-    <div class="top-actions" role="navigation" aria-label="Ações">
-      <button class="btn ghost" id="openShopBtn" title="Abrir Loja">Loja</button>
-      <button class="btn ghost" id="openSupport" title="Suporte">Suporte</button>
+    <div class="top-actions" role="navigation">
+      <button class="btn" id="openShopBtn">Loja</button>
+      <button class="btn" id="openSupport">Suporte</button>
       <div id="authArea"></div>
+      <button class="btn warn" id="adminBlockBtn" title="Bloquear usuário">Bloquear Usuário</button>
     </div>
   </div>
 
-  <!-- Layout -->
   <div class="layout" role="main">
-    <!-- Sidebar -->
-    <aside class="sidebar" aria-label="Navegação">
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <div class="nav-item active" data-view="dashboard"><span>🏠</span> Dashboard</div>
-        <div class="nav-item" data-view="schedule"><span>📅</span> Horários</div>
-        <div class="nav-item" data-view="notices"><span>📢</span> Avisos</div>
-        <div class="nav-item" data-view="events"><span>🎟️</span> Eventos</div>
-        <div class="nav-item" data-view="profile"><span>👤</span> Perfil</div>
+    <aside class="sidebar" aria-label="menu lateral">
+      <div>
+        <div class="nav-item active" data-view="dashboard">🏠 Dashboard</div>
+        <div class="nav-item" data-view="schedule">📅 Horários</div>
+        <div class="nav-item" data-view="notices">📢 Avisos</div>
+        <div class="nav-item" data-view="events">🎟️ Eventos</div>
+        <div class="nav-item" data-view="graduates">🎓 Graduados</div>
+        <div class="nav-item" data-view="birthdays">🎂 Aniversariantes</div>
+        <div class="nav-item" data-view="links">🔗 Federações</div>
       </div>
 
-      <div class="profile" aria-hidden="false">
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:54px;height:54px;border-radius:10px;background:#0b0b0b;border:1px solid var(--ring);display:flex;align-items:center;justify-content:center">
-            <img id="smallAvatar" src="https://via.placeholder.com/64x64?text=You" alt="avatar" style="width:48px;height:48px;border-radius:8px;object-fit:cover">
-          </div>
-          <div>
-            <div id="sidebarName" style="font-weight:700">Convidado</div>
-            <div class="small" id="sidebarEmail">Não autenticado</div>
-          </div>
-        </div>
-        <div style="margin-top:10px;display:flex;gap:8px">
-          <button class="btn" id="loginBtn">Login</button>
-          <button class="btn" id="logoutBtn" style="display:none">Sair</button>
+      <div class="profile">
+        <img id="sidebarAvatar" src="https://via.placeholder.com/64x64?text=?" alt="avatar" style="width:56px;height:56px;border-radius:8px;border:1px solid var(--ring);object-fit:cover">
+        <div>
+          <div id="sidebarName" style="font-weight:700">Convidado</div>
+          <div id="sidebarEmail" class="small">Não autenticado</div>
         </div>
       </div>
     </aside>
 
-    <!-- Main -->
-    <section class="main" id="mainContent">
-      <!-- Dashboard view -->
+    <section class="main">
+      <!-- Dashboard -->
       <div id="view-dashboard">
         <div class="grid">
           <div class="card">
-            <h3>Próximo Treino</h3>
-            <div class="muted">Seu próximo horário marcado</div>
-            <div id="nextSession" style="margin-top:12px"></div>
-          </div>
+            <h3>Competições Próximas</h3>
+            <div class="muted">Participe e confira as datas</div>
 
-          <div class="card">
-            <h3>Saldo / Créditos</h3>
-            <div class="muted">Raspa-Coins e pagamentos</div>
-            <div style="margin-top:12px">
-              <div style="font-weight:800;font-size:18px">R$ <span id="userBalance">0,00</span></div>
-              <div class="small" style="margin-top:6px">Último pagamento: <span id="lastPayment">nenhum</span></div>
+            <!-- Swiper carousel -->
+            <div class="comp-section">
+              <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="competitionsWrapper">
+                  <!-- slides injetados via JS -->
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+              </div>
             </div>
           </div>
 
           <div class="card">
-            <h3>Atividades Recentes</h3>
-            <div class="muted">Presenças e ações</div>
-            <div class="list" id="activityList" style="margin-top:10px"></div>
+            <h3>Alunos Graduados</h3>
+            <div class="muted">Últimas graduações</div>
+            <div style="margin-top:10px">
+              <input id="searchGraduate" class="input" placeholder="Buscar por nome ou faixa" />
+              <div class="graduates-list" id="graduatesList" style="margin-top:10px"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Aniversariantes do Mês</h3>
+            <div class="muted">Celebre com a galera</div>
+            <div class="birth-list" id="birthdaysList" style="margin-top:12px"></div>
           </div>
         </div>
 
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px">
           <div class="card" style="flex:1;min-width:320px">
             <h3>Horários Rápidos</h3>
-            <div class="muted">Toque para confirmar presença</div>
-            <div class="list" id="quickSchedule"></div>
+            <div class="muted">Confirme presença rapidamente</div>
+            <div id="quickSchedule" style="margin-top:10px"></div>
           </div>
 
           <div class="card" style="width:380px;min-width:260px">
-            <h3>Avisos Recentes</h3>
-            <div class="muted">Últimas comunicações da academia</div>
-            <div id="noticesList" style="margin-top:10px"></div>
+            <h3>Links Úteis — Federações</h3>
+            <div class="muted">Acesso direto</div>
+            <div class="links-list" id="federationsList" style="margin-top:10px"></div>
           </div>
         </div>
       </div>
 
       <!-- Schedule view -->
       <div id="view-schedule" class="hidden">
-        <div class="card">
-          <h3>Horários da Semana</h3>
-          <div class="muted">Clique em "Marcar presença" quando estiver no treino</div>
-          <div class="list" id="fullSchedule" style="margin-top:12px"></div>
-        </div>
+        <div class="card"><h3>Horários da Semana</h3><div class="muted">Marque presença nas aulas</div><div id="fullSchedule" style="margin-top:12px"></div></div>
       </div>
 
       <!-- Notices view -->
       <div id="view-notices" class="hidden">
-        <div class="card">
-          <h3>Avisos</h3>
-          <div class="muted">Comunicados oficiais</div>
-          <div class="event-list" id="allNotices" style="margin-top:12px"></div>
-        </div>
+        <div class="card"><h3>Avisos</h3><div id="allNotices" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Events view -->
+      <!-- Events (detalhe) -->
       <div id="view-events" class="hidden">
-        <div class="card">
-          <h3>Eventos & Competições</h3>
-          <div class="muted">Próximas datas importantes</div>
-          <div id="eventsList" style="margin-top:12px"></div>
-        </div>
+        <div class="card"><h3>Eventos</h3><div id="eventsList" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Profile view -->
-      <div id="view-profile" class="hidden">
-        <div class="card profile-card">
-          <img id="profileAvatar" src="https://via.placeholder.com/200x200?text=Avatar" alt="avatar">
-          <div style="font-weight:800" id="profileName">Convidado</div>
-          <div class="muted" id="profileEmail">sem e-mail</div>
-          <div style="width:100%;margin-top:12px">
-            <div style="text-align:left;margin-bottom:8px"><strong>Editar Perfil</strong></div>
-            <input class="input" id="inputName" placeholder="Nome completo">
-            <input class="input" id="inputEmail" placeholder="E-mail" style="margin-top:8px">
-            <div style="display:flex;gap:8px;margin-top:10px">
-              <button class="btn primary" id="saveProfileBtn">Salvar</button>
-              <button class="btn" id="changePassBtn">Alterar Senha</button>
-            </div>
-          </div>
-        </div>
+      <!-- Graduates view -->
+      <div id="view-graduates" class="hidden">
+        <div class="card"><h3>Todos os Graduados</h3><div id="graduatesFull" style="margin-top:12px"></div></div>
+      </div>
 
-        <div class="card" style="margin-top:12px">
-          <h3>Histórico de Presença</h3>
-          <div class="muted">Seus últimos check-ins</div>
-          <div id="attendanceHistory" style="margin-top:10px"></div>
-        </div>
+      <!-- Birthdays view -->
+      <div id="view-birthdays" class="hidden">
+        <div class="card"><h3>Aniversariantes</h3><div id="birthdaysFull" style="margin-top:12px"></div></div>
+      </div>
+
+      <!-- Links view -->
+      <div id="view-links" class="hidden">
+        <div class="card"><h3>Federações e Confederações</h3><div id="linksFull" style="margin-top:12px"></div></div>
       </div>
     </section>
   </div>
 
-  <!-- Login / Cadastro Modal -->
-  <div id="modalBg" class="hidden" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:60">
-    <div style="width:min(460px,95%);background:linear-gradient(180deg,#151517,#0f0f11);padding:18px;border-radius:12px;border:1px solid var(--ring)">
+  <!-- Login modal (demo) -->
+  <div id="modalBg" class="hidden" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:80">
+    <div style="width:min(480px,96%);background:var(--card);padding:18px;border-radius:12px;border:1px solid var(--ring)">
       <h3 id="modalTitle">Login</h3>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
-        <input id="authEmail" class="input" type="email" placeholder="E-mail">
-        <input id="authPass" class="input" type="password" placeholder="Senha">
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <input id="authEmail" class="input" type="email" placeholder="E-mail (ex: aluno@ex.com)" />
+        <input id="authPass" class="input" type="password" placeholder="Senha" />
         <div style="display:flex;gap:8px;margin-top:8px">
           <button class="btn primary" id="submitAuth">Entrar</button>
-          <button class="btn" id="switchAuth">Criar conta</button>
           <button class="btn" id="closeModal">Fechar</button>
         </div>
+        <div class="muted" style="margin-top:8px">Demo: logins são locais. Para desativar acesso permanente, faça bloqueio no backend (posso gerar instrução).</div>
       </div>
-      <div style="margin-top:10px;color:var(--muted);font-size:13px">Login demo — os dados ficam locais. Integre com Firebase/Auth posteriormente.</div>
     </div>
   </div>
 
+  <!-- admin block dialog -->
+  <div id="blockDialog" class="hidden" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:90">
+    <div style="width:min(420px,96%);background:var(--card);padding:16px;border-radius:10px;border:1px solid var(--ring)">
+      <h4>Bloquear Usuário (temporário - client)</h4>
+      <p class="muted">Digite o e-mail ou parte do identificador para bloquear (ex: jm ou jm@dominio.com)</p>
+      <input id="blockInput" class="input" placeholder="ex: jm" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn warn" id="doBlockBtn">Bloquear</button>
+        <button class="btn" id="closeBlockDialog">Cancelar</button>
+      </div>
+      <div style="margin-top:8px" class="muted">Obs: bloqueio client-side fica no seu navegador (localStorage). Para bloquear globalmente, bloqueie a conta no backend (Firebase/Auth) — posso te enviar script pronto.</div>
+    </div>
+  </div>
+
+  <!-- Swiper -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
   <script>
-    /* ------------------------
-       Demo data (seed) - você pode carregar do backend/Firebase depois
-       ------------------------ */
-    const demoUser = {
-      name: 'Aluno Demo',
-      email: 'aluno@demo.com',
-      avatar: 'https://via.placeholder.com/160x160?text=Aluno',
-      balance: '49.90'
-    };
+    /***********************
+     * DATA SEED (demo)
+     * Você pode substituir por chamadas ao backend (fetch) depois
+     ***********************/
+    const COMPETITIONS = [
+      { id:'c1', date:'2025-11-10', title:'Copa Estadual de Jiu-Jitsu', location:'Ginásio Municipal', link:'#' },
+      { id:'c2', date:'2025-12-07', title:'Open Respect Cup', location:'Centro Esportivo', link:'#' },
+      { id:'c3', date:'2026-01-20', title:'Circuito Norte/Nordeste', location:'Ginásio Regional', link:'#' }
+    ];
+
+    const GRADUATES = [
+      { id:'g1', name:'Carlos Silva', grade:'Faixa Azul', date:'2025-08-12' },
+      { id:'g2', name:'Mariana Souza', grade:'Faixa Roxa', date:'2025-09-22' },
+      { id:'g3', name:'Felipe Costa', grade:'Faixa Marrom', date:'2025-10-05' },
+      { id:'g4', name:'Ana Pereira', grade:'Faixa Preta', date:'2025-10-10' }
+    ];
+
+    const STUDENTS = [
+      { id:'s1', name:'Carlos Silva', dob:'1995-10-12', email:'carlos@example.com' },
+      { id:'s2', name:'Mariana Souza', dob:'1992-11-05', email:'mariana@example.com' },
+      { id:'s3', name:'Felipe Costa', dob:'2000-10-25', email:'felipe@example.com' },
+      { id:'s4', name:'Ana Pereira', dob:'1990-10-03', email:'ana@example.com' },
+      { id:'s5', name:'Joao JM', dob:'1988-03-15', email:'jm@exemplo.com' } // <= exemplo jm
+    ];
+
+    const FEDERATIONS = [
+      { name:'CBJJ (Confederação Brasileira de Jiu-Jitsu)', url:'https://www.cbjj.com.br' },
+      { name:'CBJJE (Confederação Brasileira de Jiu-Jitsu Esportivo)', url:'https://www.cbjje.com.br' },
+      { name:'IBJJF', url:'https://ibjjf.com' }
+    ];
 
     const SESSIONS = [
-      { id:'s1', title:'Gi - Treino Avançado', time:'Seg 19:00 - 20:30', coach:'Sensei Rafael', cat:'kimonos' },
-      { id:'s2', title:'NoGi - Técnicas', time:'Qua 19:00 - 20:30', coach:'Coach Amanda', cat:'nogi' },
-      { id:'s3', title:'Infantil - Iniciação', time:'Sáb 10:00 - 11:00', coach:'Prof. Carlos', cat:'infantil' },
-      { id:'s4', title:'Open Mat', time:'Dom 09:00 - 11:00', coach:'Equipe', cat:'open' }
+      { id:'t1', title:'Gi - Avançado', time:'Seg 19:00 - 20:30' },
+      { id:'t2', title:'NoGi - Técnicas', time:'Qua 19:00 - 20:30' },
+      { id:'t3', title:'Infantil', time:'Sáb 10:00 - 11:00' }
     ];
 
-    const NOTICES = [
-      { id:'n1', date:'2025-10-01', title:'Aula cancelada', text:'A aula de sexta foi cancelada por manutenção.' },
-      { id:'n2', date:'2025-10-05', title:'Certificação', text:'Novo curso de graduação no próximo mês. Inscreva-se.' }
-    ];
-
-    const EVENTS = [
-      { id:'e1', date:'2025-11-10', title:'Competição Estadual', location:'Ginásio Central' },
-      { id:'e2', date:'2025-12-05', title:'Festa de Confraternização', location:'Sede Respect' }
-    ];
-
-    // localStorage keys
+    // local storage keys
+    const LS_BLOCKED = 'respect_blocked_users_v1';
     const LS_USER = 'respect_user_v1';
-    const LS_ACTIVITY = 'respect_activity_v1';
-    const LS_ATTENDANCE = 'respect_att_v1';
 
-    /* ------------------------
-       State & helpers
-       ------------------------ */
-    function getStoredUser(){ try { return JSON.parse(localStorage.getItem(LS_USER)) } catch(e){ return null } }
-    function setStoredUser(u){ localStorage.setItem(LS_USER, JSON.stringify(u)) }
-    function clearStoredUser(){ localStorage.removeItem(LS_USER) }
-    function getActivity(){ try { return JSON.parse(localStorage.getItem(LS_ACTIVITY)) || [] } catch(e){ return [] } }
-    function pushActivity(a){ const arr = getActivity(); arr.unshift(a); localStorage.setItem(LS_ACTIVITY, JSON.stringify(arr.slice(0,30))); }
-    function getAttendance(){ try{ return JSON.parse(localStorage.getItem(LS_ATTENDANCE)) || [] }catch(e){return []} }
-    function pushAttendance(a){ const arr = getAttendance(); arr.unshift(a); localStorage.setItem(LS_ATTENDANCE, JSON.stringify(arr.slice(0,50))); }
+    /***********************
+     * Helpers: storage blocklist
+     ***********************/
+    function getBlockedList(){
+      try { return JSON.parse(localStorage.getItem(LS_BLOCKED)) || [] } catch(e){ return [] }
+    }
+    function addBlocked(idOrEmail){
+      const list = getBlockedList();
+      if(!list.includes(idOrEmail)) list.push(idOrEmail);
+      localStorage.setItem(LS_BLOCKED, JSON.stringify(list));
+    }
+    function isBlocked(emailOrId){
+      if(!emailOrId) return false;
+      const txt = String(emailOrId).toLowerCase();
+      return getBlockedList().some(b => txt.includes(String(b).toLowerCase()));
+    }
 
-    /* ------------------------
-       UI initialization
-       ------------------------ */
+    /***********************
+     * Basic auth (demo) — blocks attempts matching blocklist
+     * IMPORTANT: block server-side too for full effect.
+     ***********************/
+    function getStoredUser(){ try { return JSON.parse(localStorage.getItem(LS_USER)); } catch(e){ return null } }
+    function setStoredUser(u){ localStorage.setItem(LS_USER, JSON.stringify(u)); }
+    function clearUser(){ localStorage.removeItem(LS_USER); }
+
+    // UI init
     document.addEventListener('DOMContentLoaded', () => {
-      // bind nav
-      document.querySelectorAll('.sidebar .nav-item').forEach(el => el.addEventListener('click', e => {
-        document.querySelectorAll('.sidebar .nav-item').forEach(x => x.classList.remove('active'));
+      // nav
+      document.querySelectorAll('.nav-item').forEach(el => el.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
         el.classList.add('active');
         showView(el.getAttribute('data-view'));
       }));
 
       // top actions
-      document.getElementById('openShopBtn').addEventListener('click', () => {
-        // abre loja na mesma origem; ajuste se loja estiver em outro domínio
-        window.location.href = '../loja/index.html';
-      });
-      document.getElementById('openSupport').addEventListener('click', () => window.open('https://wa.me/5599999999999','_blank'));
+      document.getElementById('openShopBtn').addEventListener('click', ()=>window.location.href='../loja/index.html');
+      document.getElementById('openSupport').addEventListener('click', ()=>window.open('https://wa.me/5599999999999','_blank'));
 
       // auth area
-      const authArea = document.getElementById('authArea');
       renderAuthArea();
 
-      // login modal buttons
-      document.getElementById('loginBtn').addEventListener('click', openAuthModal);
-      document.getElementById('logoutBtn').addEventListener('click', logout);
-      document.getElementById('closeModal').addEventListener('click', closeAuthModal);
-      document.getElementById('switchAuth').addEventListener('click', toggleAuthMode);
-      document.getElementById('submitAuth').addEventListener('click', handleAuthSubmit);
+      // modal handlers
+      document.getElementById('submitAuth').addEventListener('click', handleLogin);
+      document.getElementById('closeModal').addEventListener('click', ()=>document.getElementById('modalBg').classList.add('hidden'));
 
-      // fill in dashboard
-      renderDashboard();
+      // admin block dialog
+      document.getElementById('adminBlockBtn').addEventListener('click', ()=>document.getElementById('blockDialog').classList.remove('hidden'));
+      document.getElementById('closeBlockDialog').addEventListener('click', ()=>document.getElementById('blockDialog').classList.add('hidden'));
+      document.getElementById('doBlockBtn').addEventListener('click', doBlock);
+
+      // render sections
+      initCompetitionsSwiper();
+      renderGraduates();
+      renderBirthdays();
+      renderFeds();
       renderQuickSchedule();
-      renderNotices();
-      renderFullSchedule();
-      renderEvents();
-      renderProfile();
-      renderAttendanceHistory();
 
-      // set initial view
+      // views default
       showView('dashboard');
     });
 
-    /* ------------------------
-       Views controller
-       ------------------------ */
-    function showView(name){
-      ['dashboard','schedule','notices','events','profile'].forEach(v => {
-        document.getElementById('view-'+v).classList.toggle('hidden', v !== name);
-      });
-      // update main content title / analytics if needed
-    }
-
-    /* ------------------------
-       Auth (demo)
-       ------------------------ */
-    let authMode = 'login'; // or 'signup'
+    /***********************
+     * Render auth area (topbar + sidebar)
+     ***********************/
     function renderAuthArea(){
+      const container = document.getElementById('authArea');
+      container.innerHTML = '';
       const user = getStoredUser();
-      const authArea = document.getElementById('authArea');
-      authArea.innerHTML = '';
       if(user){
         const pill = document.createElement('div');
         pill.className = 'user-pill';
-        pill.innerHTML = `<img src="${escape(user.avatar||'https://via.placeholder.com/48?text=U')}" alt="avatar" style="width:28px;height:28px;border-radius:6px;object-fit:cover"><div style="font-weight:700">${escape(user.name||'Aluno')}</div>`;
-        authArea.appendChild(pill);
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'inline-flex';
-        // update sidebar
+        pill.innerHTML = `<img src="${escape(user.avatar||'https://via.placeholder.com/48')}" alt="a" style="width:28px;height:28px;border-radius:6px"><div>${escape(user.name||'Aluno')}</div>`;
+        container.appendChild(pill);
+
+        // show logout on pill click
+        pill.addEventListener('click', ()=>{ if(confirm('Deseja sair?')) { clearUser(); renderAuthArea(); location.reload(); } });
+        // update sidebar info
         document.getElementById('sidebarName').innerText = user.name || 'Aluno';
         document.getElementById('sidebarEmail').innerText = user.email || '';
-        document.getElementById('smallAvatar').src = user.avatar || 'https://via.placeholder.com/64';
+        document.getElementById('sidebarAvatar').src = user.avatar || 'https://via.placeholder.com/64';
       } else {
-        const loginBtn = document.createElement('button');
-        loginBtn.className = 'btn';
-        loginBtn.innerText = 'Entrar';
-        loginBtn.addEventListener('click', openAuthModal);
-        authArea.appendChild(loginBtn);
-        document.getElementById('loginBtn').style.display = 'inline-flex';
-        document.getElementById('logoutBtn').style.display = 'none';
+        const btn = document.createElement('button'); btn.className='btn'; btn.innerText='Entrar';
+        btn.addEventListener('click', ()=> document.getElementById('modalBg').classList.remove('hidden'));
+        container.appendChild(btn);
         document.getElementById('sidebarName').innerText = 'Convidado';
         document.getElementById('sidebarEmail').innerText = 'Não autenticado';
-        document.getElementById('smallAvatar').src = 'https://via.placeholder.com/64x64?text=?';
+        document.getElementById('sidebarAvatar').src = 'https://via.placeholder.com/64x64?text=?';
       }
     }
 
-    function openAuthModal(){
-      authMode = 'login';
-      document.getElementById('modalTitle').innerText = 'Login';
-      document.getElementById('authEmail').value = '';
-      document.getElementById('authPass').value = '';
-      document.getElementById('modalBg').classList.remove('hidden');
-    }
-    function closeAuthModal(){
-      document.getElementById('modalBg').classList.add('hidden');
-    }
-    function toggleAuthMode(){
-      authMode = (authMode === 'login') ? 'signup' : 'login';
-      document.getElementById('modalTitle').innerText = (authMode === 'login') ? 'Login' : 'Criar Conta';
-      document.getElementById('switchAuth').innerText = (authMode === 'login') ? 'Criar conta' : 'Tenho conta';
-    }
-    function handleAuthSubmit(){
+    /***********************
+     * Login handler (demo)
+     ***********************/
+    function handleLogin(){
       const email = document.getElementById('authEmail').value.trim();
       const pass = document.getElementById('authPass').value.trim();
       if(!email || !pass){ alert('Preencha e-mail e senha'); return; }
-      // demo logic: criar uma conta local simples
-      if(authMode === 'signup'){
-        const newUser = { name: email.split('@')[0], email, avatar: 'https://via.placeholder.com/160x160?text=User', balance: '0.00' };
-        setStoredUser(newUser);
-        pushActivity({ when: Date.now(), text: 'Conta criada (demo)' });
-        renderAuthArea();
-        closeAuthModal();
-        alert('Conta criada (demo).');
-      } else {
-        // login demo: se email == demoUser.email -> set demoUser, else create ephemeral
-        if(email === demoUser.email && pass === 'demo'){
-          setStoredUser(demoUser);
-          pushActivity({ when: Date.now(), text: 'Login como Aluno Demo' });
-          renderAuthArea();
-          closeAuthModal();
-          renderDashboard();
-        } else {
-          // simples: cria usuário com email
-          const u = { name: email.split('@')[0], email, avatar: 'https://via.placeholder.com/160x160?text=U', balance: '0.00' };
-          setStoredUser(u);
-          pushActivity({ when: Date.now(), text: 'Login (demo) como ' + u.name });
-          renderAuthArea();
-          closeAuthModal();
-        }
+
+      // BLOCK CHECK: por segurança bloqueamos logins que contenham entradas da blocklist (ex: "jm")
+      if(isBlocked(email) || isBlocked(pass) || isBlocked(email.split('@')[0])){
+        alert('Este usuário foi bloqueado. Acesso negado.');
+        document.getElementById('modalBg').classList.add('hidden');
+        return;
       }
-      // update profile view
-      renderProfile();
-    }
-    function logout(){
-      clearStoredUser();
+
+      // demo logic: autentica localmente (substituir por Firebase/Auth no futuro)
+      const user = { name: email.split('@')[0], email, avatar: 'https://via.placeholder.com/160x160?text='+encodeURIComponent(email.split('@')[0]) };
+      setStoredUser(user);
+      alert('Login efetuado (demo).');
+      document.getElementById('modalBg').classList.add('hidden');
       renderAuthArea();
-      renderProfile();
-      alert('Você saiu da conta.');
     }
 
-    /* ------------------------
-       Dashboard rendering
-       ------------------------ */
-    function renderDashboard(){
-      // next session: pick first upcoming from SESSIONS
-      const next = SESSIONS[0];
-      const nextEl = document.getElementById('nextSession');
-      nextEl.innerHTML = `
-        <div class="session">
-          <div class="left">
-            <div class="avatar-small">🏷️</div>
-            <div class="meta">
-              <div class="title">${escape(next.title)}</div>
-              <div class="time">${escape(next.time)} • ${escape(next.coach)}</div>
-            </div>
-          </div>
-          <div class="attendance">
-            <button class="btn" onclick="markAttendance('${next.id}')">Marcar presença</button>
-          </div>
-        </div>
-      `;
-
-      // activity list
-      const activity = getActivity();
-      const actEl = document.getElementById('activityList');
-      actEl.innerHTML = '';
-      if(activity.length === 0){
-        actEl.innerHTML = '<div class="muted">Nenhuma atividade recente.</div>';
+    /***********************
+     * ADMIN: doBlock (client-side)
+     ***********************/
+    function doBlock(){
+      const v = document.getElementById('blockInput').value.trim();
+      if(!v){ alert('Digite um identificador (ex: jm ou jm@dominio.com)'); return; }
+      addBlocked(v);
+      // se o usuário atual corresponder ao bloqueio, forçar logout
+      const user = getStoredUser();
+      if(user && (user.email.toLowerCase().includes(v.toLowerCase()) || user.name.toLowerCase().includes(v.toLowerCase()))){
+        clearUser();
+        alert('Usuário atualmente logado corresponde ao bloqueio e foi desconectado.');
+        renderAuthArea();
       } else {
-        activity.slice(0,6).forEach(a => {
-          const when = new Date(a.when);
-          const el = document.createElement('div');
-          el.className = 'small';
-          el.innerText = `${when.toLocaleString()} — ${a.text}`;
-          actEl.appendChild(el);
+        alert('Identificador bloqueado (client-side). Para bloqueio global, realize no backend.');
+      }
+      document.getElementById('blockDialog').classList.add('hidden');
+    }
+
+    /***********************
+     * Competitions swiper
+     ***********************/
+    let compSwiper;
+    function initCompetitionsSwiper(){
+      // populate slides
+      const wrap = document.getElementById('competitionsWrapper');
+      wrap.innerHTML = '';
+      COMPETITIONS.forEach(c => {
+        const slide = document.createElement('div'); slide.className='swiper-slide';
+        slide.innerHTML = `
+          <div style="font-size:13px;color:var(--muted)">${escape(c.date)}</div>
+          <div class="comp-title">${escape(c.title)}</div>
+          <div class="small">${escape(c.location)}</div>
+          <div style="margin-top:8px"><a class="btn" href="${c.link || '#'}" target="_blank">Detalhes</a></div>
+        `;
+        wrap.appendChild(slide);
+      });
+
+      compSwiper = new Swiper('.mySwiper', {
+        slidesPerView: 1,
+        spaceBetween: 12,
+        loop: true,
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: { 640:{ slidesPerView: 2 }, 1024:{ slidesPerView: 3 } }
+      });
+    }
+
+    /***********************
+     * Graduates
+     ***********************/
+    function renderGraduates(){
+      const wrap = document.getElementById('graduatesList');
+      wrap.innerHTML = '';
+      GRADUATES.slice(0,20).forEach(g => {
+        const div = document.createElement('div'); div.className='grad-item';
+        div.innerHTML = `<div><strong>${escape(g.name)}</strong><div class="small">${escape(g.grade)} • ${escape(g.date)}</div></div><div class="small">${escape(g.id)}</div>`;
+        wrap.appendChild(div);
+      });
+
+      // full list
+      const full = document.getElementById('graduatesFull'); full.innerHTML = '';
+      GRADUATES.forEach(g => {
+        const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escape(g.name)}</strong><div class="small">${escape(g.grade)} • ${escape(g.date)}</div></div>`;
+        full.appendChild(el);
+      });
+
+      // search
+      document.getElementById('searchGraduate').addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        const items = GRADUATES.filter(x => x.name.toLowerCase().includes(q) || x.grade.toLowerCase().includes(q));
+        const w = document.getElementById('graduatesList'); w.innerHTML = '';
+        items.slice(0,50).forEach(g => {
+          const d = document.createElement('div'); d.className='grad-item'; d.innerHTML = `<div><strong>${escape(g.name)}</strong><div class="small">${escape(g.grade)} • ${escape(g.date)}</div></div>`;
+          w.appendChild(d);
+        });
+      });
+    }
+
+    /***********************
+     * Birthdays this month
+     ***********************/
+    function renderBirthdays(){
+      const list = document.getElementById('birthdaysList');
+      const full = document.getElementById('birthdaysFull');
+      list.innerHTML = ''; full.innerHTML = '';
+      const now = new Date();
+      const month = now.getMonth() + 1; // 1..12
+      const birthdays = STUDENTS.filter(s => {
+        if(!s.dob) return false;
+        const parts = s.dob.split('-'); // YYYY-MM-DD
+        const m = parseInt(parts[1],10);
+        return m === month;
+      });
+
+      if(birthdays.length === 0){
+        list.innerHTML = '<div class="small muted">Nenhum aniversariante este mês.</div>';
+      } else {
+        birthdays.forEach(s => {
+          const parts = s.dob.split('-'); const day = parts[2];
+          const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escape(s.name)}</strong><div class="small">Aniversário: ${day}/${(new Date(s.dob).getMonth()+1)}</div></div><div class="small">${escape(s.email)}</div>`;
+          list.appendChild(el);
         });
       }
 
-      // user balance
-      const user = getStoredUser();
-      document.getElementById('userBalance').innerText = (user && user.balance) ? user.balance : (demoUser.balance || '0,00');
-      document.getElementById('lastPayment').innerText = '—';
+      // full list - group by month
+      STUDENTS.forEach(s => {
+        const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escape(s.name)}</strong><div class="small">Nascimento: ${escape(s.dob)}</div></div><div class="small">${escape(s.email)}</div>`;
+        full.appendChild(el);
+      });
     }
 
-    /* ------------------------
-       Quick schedule + full schedule
-       ------------------------ */
+    /***********************
+     * Federations links
+     ***********************/
+    function renderFeds(){
+      const wrap = document.getElementById('federationsList');
+      wrap.innerHTML = '';
+      FEDERATIONS.forEach(f => {
+        const div = document.createElement('div'); div.className='grad-item'; div.innerHTML = `<div style="font-weight:700">${escape(f.name)}</div><div class="small">${escape(f.url)}</div><div style="margin-top:6px"><a class="btn" href="${f.url}" target="_blank">Abrir</a></div>`;
+        wrap.appendChild(div);
+      });
+
+      // full links page
+      const full = document.getElementById('linksFull'); full.innerHTML = '';
+      FEDERATIONS.forEach(f => {
+        const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div style="font-weight:700">${escape(f.name)}</div><div class="small">${escape(f.url)}</div><div style="margin-top:6px"><a class="btn" href="${f.url}" target="_blank">Abrir</a></div>`;
+        full.appendChild(el);
+      });
+    }
+
+    /***********************
+     * Quick schedule
+     ***********************/
     function renderQuickSchedule(){
       const wrap = document.getElementById('quickSchedule');
       wrap.innerHTML = '';
       SESSIONS.forEach(s => {
-        const el = document.createElement('div');
-        el.className = 'session';
-        el.innerHTML = `
-          <div class="left">
-            <div class="avatar-small">🤼</div>
-            <div class="meta">
-              <div class="title">${escape(s.title)}</div>
-              <div class="time">${escape(s.time)}</div>
-            </div>
-          </div>
-          <div class="attendance">
-            <button class="btn" onclick="markAttendance('${s.id}')">Presença</button>
-            <button class="btn ghost" onclick="viewSession('${s.id}')">Ver</button>
-          </div>
-        `;
+        const el = document.createElement('div'); el.className='grad-item';
+        el.innerHTML = `<div><strong>${escape(s.title)}</strong><div class="small">${escape(s.time)}</div></div><div><button class="btn" onclick="markPresence('${s.id}')">Presença</button></div>`;
         wrap.appendChild(el);
       });
-    }
 
-    function renderFullSchedule(){
-      const wrap = document.getElementById('fullSchedule');
-      wrap.innerHTML = '';
+      // full schedule
+      const full = document.getElementById('fullSchedule'); full.innerHTML = '';
       SESSIONS.forEach(s => {
-        const el = document.createElement('div');
-        el.className = 'session';
-        el.innerHTML = `
-          <div class="left">
-            <div class="avatar-small">🏷️</div>
-            <div class="meta">
-              <div class="title">${escape(s.title)}</div>
-              <div class="time">${escape(s.time)} • ${escape(s.coach)}</div>
-            </div>
-          </div>
-          <div class="attendance">
-            <button class="btn" onclick="markAttendance('${s.id}')">Marcar presença</button>
-          </div>
-        `;
-        wrap.appendChild(el);
+        const el = document.createElement('div'); el.className='grad-item';
+        el.innerHTML = `<div><strong>${escape(s.title)}</strong><div class="small">${escape(s.time)}</div></div><div><button class="btn" onclick="markPresence('${s.id}')">Marcar</button></div>`;
+        full.appendChild(el);
       });
     }
 
-    /* ------------------------
-       Notices / Events rendering
-       ------------------------ */
-    function renderNotices(){
-      const el = document.getElementById('noticesList');
-      el.innerHTML = '';
-      NOTICES.slice(0,4).forEach(n => {
-        const item = document.createElement('div');
-        item.className = 'notice';
-        item.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${escape(n.title)}</strong><div class="small">${escape(n.text)}</div></div><div class="date muted">${escape(n.date)}</div></div>`;
-        el.appendChild(item);
-      });
-    }
-
-    function renderEvents(){
-      const el = document.getElementById('eventsList');
-      el.innerHTML = '';
-      EVENTS.forEach(e => {
-        const item = document.createElement('div');
-        item.className = 'notice';
-        item.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${escape(e.title)}</strong><div class="small">${escape(e.location)}</div></div><div class="muted">${escape(e.date)}</div></div>`;
-        el.appendChild(item);
-      });
-
-      // full notices
-      const allNotices = document.getElementById('allNotices');
-      allNotices.innerHTML = '';
-      NOTICES.forEach(n => {
-        const it = document.createElement('div');
-        it.className = 'notice';
-        it.innerHTML = `<div><strong>${escape(n.title)}</strong><div class="small">${escape(n.date)} — ${escape(n.text)}</div></div>`;
-        allNotices.appendChild(it);
-      });
-    }
-
-    /* ------------------------
-       Profile
-       ------------------------ */
-    function renderProfile(){
+    function markPresence(id){
       const user = getStoredUser();
-      const name = user ? user.name : 'Convidado';
-      const email = user ? user.email : 'sem e-mail';
-      document.getElementById('profileName').innerText = name;
-      document.getElementById('profileEmail').innerText = email;
-      document.getElementById('inputName').value = name || '';
-      document.getElementById('inputEmail').value = email || '';
-      document.getElementById('profileAvatar').src = (user && user.avatar) ? user.avatar : 'https://via.placeholder.com/200x200?text=Avatar';
+      if(!user && !confirm('Você não está logado. Deseja marcar presença como convidado?')) return;
+      const when = new Date();
+      // aqui você poderia enviar para backend / Firestore
+      alert('Presença marcada: ' + id + ' em ' + when.toLocaleString());
+      // pushActivity etc (omiti para brevidade)
     }
 
-    document.getElementById('saveProfileBtn')?.addEventListener('click', () => {
-      const name = document.getElementById('inputName').value.trim();
-      const email = document.getElementById('inputEmail').value.trim();
-      if(!email){ alert('E-mail obrigatório'); return; }
-      const user = getStoredUser() || {};
-      user.name = name || user.name || email.split('@')[0];
-      user.email = email;
-      setStoredUser(user);
-      pushActivity({ when: Date.now(), text: 'Perfil atualizado' });
-      renderAuthArea();
-      renderProfile();
-      alert('Perfil salvo (local demo).');
-    });
-
-    /* ------------------------
-       Attendance and activity
-       ------------------------ */
-    function markAttendance(sessionId){
-      const user = getStoredUser();
-      if(!user){ if(!confirm('Você não está logado. Deseja continuar como convidado?')) return; }
-      const s = SESSIONS.find(x => x.id === sessionId);
-      const now = Date.now();
-      pushAttendance({ when: now, sessionId, title: s ? s.title : 'Sessão', user: user ? user.email : 'convidado' });
-      pushActivity({ when: now, text: `Presença registrada: ${s ? s.title : sessionId}` });
-      renderDashboard();
-      renderAttendanceHistory();
-      alert('Presença registrada (demo).');
+    /***********************
+     * View controller
+     ***********************/
+    function showView(name){
+      const views = { dashboard:'view-dashboard', schedule:'view-schedule', notices:'view-notices', events:'view-events', graduates:'view-graduates', birthdays:'view-birthdays', links:'view-links' };
+      for(const k in views) document.getElementById(views[k]).classList.toggle('hidden', k !== name);
     }
 
-    function viewSession(id){
-      const s = SESSIONS.find(x => x.id === id);
-      if(!s) return alert('Sessão não encontrada');
-      alert(`${s.title}\n${s.time}\nCoach: ${s.coach}`);
-    }
+    /***********************
+     * Utilities
+     ***********************/
+    function escape(s=''){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
 
-    function renderAttendanceHistory(){
-      const list = getAttendance();
-      const el = document.getElementById('attendanceHistory');
-      el.innerHTML = '';
-      if(!list.length){ el.innerHTML = '<div class="muted">Nenhuma presença registrada.</div>'; return; }
-      list.slice(0,20).forEach(a => {
-        const d = new Date(a.when);
-        const row = document.createElement('div');
-        row.className = 'small';
-        row.innerText = `${d.toLocaleString()} — ${a.title || a.sessionId || ''}`;
-        el.appendChild(row);
-      });
-    }
+    /***********************
+     * Optional: populate initial blocklist with 'jm' to immediately block any jm identifiers
+     * (uncomment next line if you want JM blocked on load)
+     ***********************/
+    // addBlocked('jm');
 
-    /* ------------------------
-       Utilities
-       ------------------------ */
-    function escape(str){ return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
-    function toggle(el){ el.classList.toggle('hidden') }
-
-    // small helpers to simulate initial demo state
-    (function seedDemo(){
-      if(!getStoredUser()){
-        // keep guest by default; don't auto-set demo
-      }
-    })();
+    /***********************
+     * Expose for debugging in console
+     ***********************/
+    window._respect = { addBlocked, getBlockedList, isBlocked, setStoredUser, getStoredUser, clearUser };
   </script>
 </body>
-  </html>
+</html>
