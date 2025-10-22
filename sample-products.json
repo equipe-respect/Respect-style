@@ -1,0 +1,38 @@
+[
+  {
+    "id": "p1",
+    "title": "Kimono Preto - Pro Series",
+    "description": "Kimono resistente, tecido reforçado, ideal para treinos intensos.",
+    "price": "199.90",
+    "image": "https://via.placeholder.com/800x600?text=Kimono+Pro",
+    "buy_link": "https://shopee.example.com/produto1",
+    "category": "kimonos"
+  },
+  {
+    "id": "p2",
+    "title": "Faixa Azul Oficial",
+    "description": "Faixa de algodão resistente com costura reforçada.",
+    "price": "49.90",
+    "image": "https://via.placeholder.com/800x600?text=Faixa+Azul",
+    "buy_link": "https://shopee.example.com/produto2",
+    "category": "faixas"
+  },
+  {
+    "id": "p3",
+    "title": "Mochila Jiu Jitsu",
+    "description": "Mochila grande, compartimento para kimono e bolso seco.",
+    "price": "129.90",
+    "image": "https://via.placeholder.com/800x600?text=Mochila",
+    "buy_link": "https://shopee.example.com/produto3",
+    "category": "acessorios"
+  },
+  {
+    "id": "p4",
+    "title": "Conjunto Promo - Kimono + Faixa",
+    "description": "Pacote promocional com desconto por tempo limitado.",
+    "price": "219.90",
+    "image": "https://via.placeholder.com/800x600?text=Promo",
+    "buy_link": "https://shopee.example.com/produto4",
+    "category": "ofertas"
+  }
+]
