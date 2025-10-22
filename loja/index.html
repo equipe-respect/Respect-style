@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Loja Respect Style • Jiu Jitsu</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+  <style>
+    :root{
+      --bg:#0e0e10;
+      --card:#151517;
+      --ring:#2a2a2e;
+      --red:#e50914;
+      --white:#fff;
+      --muted:#cfd0d7;
+      --gradient: linear-gradient(135deg,#1f1f23,#121213);
+      --cta-gradient: linear-gradient(90deg,#e50914,#ff4c4c);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--white)}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    /* Topbar */
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid var(--ring);position:sticky;top:0;background:rgba(14,14,16,.88);backdrop-filter:blur(6px);z-index:50}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand img{width:52px;height:52px;border-radius:12px;border:2px solid var(--red);object-fit:cover}
+    .brand h1{font-size:20px;margin:0}
+    .brand .subtitle{font-size:12px;color:var(--muted)}
+    .support-btn{border:1px solid var(--ring);padding:8px 12px;border-radius:10px;font-weight:700;transition:all .18s}
+    .support-btn:hover{background:var(--red);border-color:var(--red);color:var(--white)}
+
+    .container{max-width:1100px;margin:22px auto;padding:0 16px}
+
+    /* Banner */
+    .banner{width:100%;height:220px;border-radius:14px;background:var(--gradient);display:flex;align-items:center;gap:20px;padding:22px;color:var(--white);box-shadow:0 18px 45px rgba(0,0,0,.5)}
+    .banner .hero-text{flex:1}
+    .banner h2{margin:0;font-size:28px}
+    .banner p{margin:6px 0 0;color:var(--muted)}
+
+    /* Categories */
+    .categories-wrap{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .categories-title{font-weight:700}
+    .categories{display:flex;gap:12px;overflow:auto;padding:12px 6px}
+    .cat-btn{flex:0 0 auto;background:var(--card);border:1px solid var(--ring);padding:10px 14px;border-radius:12px;color:var(--white);cursor:pointer;transition:transform .15s,box-shadow .18s}
+    .cat-btn:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+    .cat-btn.active{outline:2px solid rgba(229,9,20,.16);box-shadow:0 6px 20px rgba(0,0,0,.45)}
+
+    /* Swiper / Produtos */
+    .products-section{margin-top:18px}
+    .swiper{padding:12px 2px}
+    .swiper-slide{display:flex;flex-direction:column;gap:10px;background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--ring);min-height:260px}
+    .product-img{height:160px;border-radius:10px;overflow:hidden;background:#0b0b0b;display:flex;align-items:center;justify-content:center}
+    .product-img img{width:100%;height:100%;object-fit:cover}
+    .product-title{font-size:15px;font-weight:700}
+    .product-desc{font-size:13px;color:var(--muted);line-height:1.35}
+    .price{font-weight:800;color:var(--red);margin-top:6px}
+    .buy-btn{margin-top:auto;padding:10px;border-radius:10px;background:var(--cta-gradient);color:var(--white);text-align:center;cursor:pointer;font-weight:800;border:none}
+    .buy-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,0,0,.25)}
+
+    /* Empty state */
+    .empty-state{padding:36px;border-radius:12px;background:#0f0f10;border:1px dashed var(--ring);color:var(--muted);text-align:center}
+
+    /* Footer */
+    footer{margin:32px 0 80px;color:#bdbdc6;text-align:center;font-size:13px}
+
+    /* small adjustments */
+    @media(max-width:900px){ .banner{flex-direction:column;align-items:flex-start;height:auto} .banner h2{font-size:20px} }
+    @media(max-width:640px){
+      .banner{height:auto;padding:16px}
+      .product-img{height:140px}
+    }
+
+    /* Hidden slides helper */
+    .swiper-slide-hidden{display:none !important;height:0 !important;padding:0 !important;margin:0 !important;border:0 !important}
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="brand">
+      <img src="../imagens/logo-respect.png" alt="Respect Style" onerror="this.src='https://via.placeholder.com/80x80?text=Logo'">
+      <div>
+        <h1>Respect Style</h1>
+        <div class="subtitle">Loja • Portal do Aluno</div>
+      </div>
+    </div>
+    <a class="support-btn" href="https://wa.me/5599999999999" target="_blank" rel="noopener">Suporte</a>
+  </div>
+
+  <div class="container">
+
+    <!-- Banner -->
+    <div class="banner">
+      <div class="hero-text">
+        <h2>Loja Respect Style — Equipamentos e Acessórios</h2>
+        <p>Selecione uma categoria, veja produtos em destaque e compre com links diretos. Estoque próprio e produtos afiliados.</p>
+      </div>
+      <div style="min-width:160px;text-align:right">
+        <div style="background:#0f0f10;border-radius:10px;padding:8px 12px;border:1px solid var(--ring)">
+          <div style="font-size:12px;color:var(--muted)">Atendimento</div>
+          <div style="font-weight:800">WhatsApp • (99) 99999-9999</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="categories-wrap">
+      <div class="categories-title">Categorias</div>
+      <div style="font-size:13px;color:var(--muted)">Toque numa categoria para filtrar</div>
+    </div>
+    <div class="categories" id="categories">
+      <button class="cat-btn active" data-cat="all" onclick="filterCategory('all', this)">Todas</button>
+      <button class="cat-btn" data-cat="kimonos" onclick="filterCategory('kimonos', this)">Kimonos</button>
+      <button class="cat-btn" data-cat="faixas" onclick="filterCategory('faixas', this)">Faixas</button>
+      <button class="cat-btn" data-cat="acessorios" onclick="filterCategory('acessorios', this)">Acessórios</button>
+      <button class="cat-btn" data-cat="ofertas" onclick="filterCategory('ofertas', this)">Ofertas</button>
+    </div>
+
+    <!-- Produtos -->
+    <div class="products-section">
+      <h3 style="margin:10px 4px 8px 4px">Produtos em Destaque</h3>
+
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper" id="swiper-wrapper">
+
+          <!-- Produto (exemplo) -->
+          <div class="swiper-slide" data-cat="kimonos">
+            <div class="product-img">
+              <img src="../imagens/produto1.jpg" alt="Kimono Preto" onerror="this.src='https://via.placeholder.com/400x300?text=Kimono'">
+            </div>
+            <div class="product-title">Kimono Preto - Pro Series</div>
+            <div class="product-desc">Kimono resistente, tecido reforçado, ideal para treinos intensos.</div>
+            <div class="price">R$199,90</div>
+            <button class="buy-btn" onclick="goToBuy('https://shopee.example.com/produto1')">Comprar</button>
+          </div>
+
+          <div class="swiper-slide" data-cat="faixas">
+            <div class="product-img">
+              <img src="../imagens/produto2.jpg" alt="Faixa Azul" onerror="this.src='https://via.placeholder.com/400x300?text=Faixa'">
+            </div>
+            <div class="product-title">Faixa Azul Oficial</div>
+            <div class="product-desc">Faixa de algodão resistente, costura reforçada.</div>
+            <div class="price">R$49,90</div>
+            <button class="buy-btn" onclick="goToBuy('https://shopee.example.com/produto2')">Comprar</button>
+          </div>
+
+          <div class="swiper-slide" data-cat="acessorios">
+            <div class="product-img">
+              <img src="../imagens/produto3.jpg" alt="Mochila Jiu Jitsu" onerror="this.src='https://via.placeholder.com/400x300?text=Mochila'">
+            </div>
+            <div class="product-title">Mochila Jiu Jitsu</div>
+            <div class="product-desc">Mochila grande, compartimento para kimono e bolso seco.</div>
+            <div class="price">R$129,90</div>
+            <button class="buy-btn" onclick="goToBuy('https://shopee.example.com/produto3')">Comprar</button>
+          </div>
+
+          <div class="swiper-slide" data-cat="ofertas">
+            <div class="product-img">
+              <img src="../imagens/produto4.jpg" alt="Conjunto Promo" onerror="this.src='https://via.placeholder.com/400x300?text=Promo'">
+            </div>
+            <div class="product-title">Conjunto Promo - Kimono + Faixa</div>
+            <div class="product-desc">Pacote promocional com desconto por tempo limitado.</div>
+            <div class="price">R$219,90</div>
+            <button class="buy-btn" onclick="goToBuy('https://shopee.example.com/produto4')">Comprar</button>
+          </div>
+
+          <!-- adicione mais produtos aqui, siga o mesmo formato e defina data-cat="categoria" -->
+        </div>
+
+        <!-- controles -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+      <!-- empty state (visível quando filtro não encontrar itens) -->
+      <div id="emptyState" class="empty-state" style="display:none;margin-top:12px">Nenhum produto encontrado nesta categoria.</div>
+    </div>
+
+    <footer>© Respect Style — Desenvolvido por equipe-respect</footer>
+  </div>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+  <script>
+    // Inicializa o Swiper
+    const swiper = new Swiper(".mySwiper", {
+      slidesPerView: 1,
+      spaceBetween: 16,
+      loop: true,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      breakpoints: {
+        640: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      },
+    });
+
+    // Função para abrir link de compra (substitua os URLs por links reais)
+    function goToBuy(url){
+      if(!url) return alert('Link de compra indisponível');
+      window.open(url, '_blank');
+    }
+
+    // Filtragem por categoria
+    function filterCategory(cat, btnEl){
+      // atualizar botão ativo
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      if(btnEl) btnEl.classList.add('active');
+
+      const slides = Array.from(document.querySelectorAll('.swiper-slide'));
+      let found = 0;
+
+      slides.forEach(slide => {
+        const slideCat = slide.getAttribute('data-cat') || 'all';
+        if(cat === 'all' || slideCat === cat){
+          slide.classList.remove('swiper-slide-hidden');
+          found++;
+        } else {
+          slide.classList.add('swiper-slide-hidden');
+        }
+      });
+
+      // Atualiza Swiper para recalcular slides visíveis
+      setTimeout(() => {
+        swiper.update(); // recalcula
+        // se nenhum encontrado, mostra mensagem
+        document.getElementById('emptyState').style.display = found ? 'none' : 'block';
+      }, 50);
+    }
+
+    // garantir que o estado inicial esteja correto
+    document.addEventListener('DOMContentLoaded', () => {
+      filterCategory('all', document.querySelector('.cat-btn[data-cat="all"]'));
+    });
+  </script>
+</body>
+  </html>
