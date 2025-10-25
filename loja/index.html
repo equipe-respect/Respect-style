@@ -6,202 +6,139 @@
 <title>Respect Style • Loja Oficial</title>
 <link rel="icon" href="logo.png">
 <style>
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #111;
-  color: #fff;
-}
-header {
-  background: linear-gradient(90deg, #8B0000, #FF0000);
-  color: #FFD700;
-  padding: 15px;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-header h1 { margin: 0; font-size: 1.4rem; }
-.back-btn {
-  position: absolute;
-  left: 10px;
-  top: 12px;
-  background: #FFD700;
-  color: #111;
-  padding: 5px 12px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  text-decoration: none;
-  cursor: pointer;
-}
-.search-box {
-  margin: 15px;
-  display: flex;
-}
-.search-box input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px 0 0 10px;
-  border: 1px solid #FFD700;
-  background: #222;
-  color: #fff;
-}
-.search-box button {
-  padding: 10px 15px;
-  border: none;
-  background: #FFD700;
-  color: #111;
-  border-radius: 0 10px 10px 0;
-  cursor: pointer;
-}
-.categories {
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
-  padding: 10px;
-  background: #111;
-}
-.categories::-webkit-scrollbar { display: none; }
-.category {
-  flex: 0 0 auto;
-  background: #8B0000;
-  color: #FFD700;
-  padding: 8px 15px;
-  border-radius: 20px;
-  white-space: nowrap;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: 0.3s;
-}
-.category:hover { transform: scale(1.05); background: #FF0000; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #111; /* fundo preto */
+    color: #fff;
+  }
 
-/* Carrossel com setas */
-.carousel-container { position: relative; }
-.carousel {
-  display: flex;
-  overflow-x: auto;
-  gap: 15px;
-  padding: 15px;
-  scroll-behavior: smooth;
-}
-.carousel::-webkit-scrollbar { display: none; }
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #FFD700;
-  border: none;
-  color: #111;
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 5;
-}
-.carousel-btn.left { left: 10px; }
-.carousel-btn.right { right: 10px; }
+  header {
+    background: linear-gradient(90deg, #8B0000, #FF0000); /* vermelho degradê */
+    color: #FFD700; /* dourado */
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
 
-.product {
-  min-width: 180px;
-  background: #222;
-  border-radius: 15px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.5);
-  text-align: center;
-  padding: 10px;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.product:hover { transform: scale(1.05); }
-.product img { width: 100%; border-radius: 10px; }
-.product h3 { font-size: 1rem; margin: 10px 0 5px; }
-.product p { color: #FFD700; font-weight: 600; }
+  header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
 
-/* Produtos variados (grid) */
-.varied-products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
-  padding: 15px;
-}
-.varied-product {
-  background: #222;
-  border-radius: 15px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.5);
-  text-align: center;
-  padding: 10px;
-  transition: transform 0.2s;
-}
-.varied-product:hover { transform: scale(1.05); }
-.varied-product img { width: 100%; border-radius: 10px; }
-.buy-btn {
-  background: #FFD700;
-  color: #111;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 5px;
-}
+  .back-btn {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    background: #FFD700; /* dourado */
+    color: #111;
+    padding: 5px 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-/* Carrinho flutuante */
-.cart-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #FFD700;
-  color: #111;
-  padding: 10px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  z-index: 100;
-}
+  .search-box {
+    margin: 15px;
+    display: flex;
+  }
 
-#cartModal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.9);
-  color: #fff;
-  padding: 20px;
-  overflow-y: auto;
-  z-index: 200;
-}
-#cartModal h2 { margin-top: 0; color: #FFD700; }
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #222;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 10px;
-}
-.cart-item button {
-  background: #FF0000;
-  border: none;
-  color: #FFD700;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+  .search-box input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid #FFD700;
+    background: #222;
+    color: #fff;
+  }
 
-.close-cart {
-  background: #FFD700;
-  color: #111;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-bottom: 15px;
-}
+  .search-box button {
+    padding: 10px 15px;
+    border: none;
+    background: #FFD700;
+    color: #111;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+  }
 
-footer {
-  text-align: center;
-  padding: 15px;
-  color: #777;
-  background: #111;
-  margin-top: 30px;
-}
+  .categories {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px;
+    background: #111;
+    scrollbar-width: none;
+  }
+
+  .categories::-webkit-scrollbar { display: none; }
+
+  .category {
+    flex: 0 0 auto;
+    background: #8B0000; /* vermelho escuro */
+    color: #FFD700; /* dourado */
+    padding: 8px 15px;
+    border-radius: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.3s;
+  }
+
+  .category:hover {
+    transform: scale(1.05);
+    background: #FF0000;
+  }
+
+  /* Carrossel */
+  .carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .carousel::-webkit-scrollbar { display: none; }
+
+  .product {
+    min-width: 180px;
+    background: #222;
+    border-radius: 15px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 10px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .product:hover {
+    transform: scale(1.05);
+  }
+
+  .product img {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .product h3 {
+    font-size: 1rem;
+    margin: 10px 0 5px;
+  }
+
+  .product p {
+    color: #FFD700;
+    font-weight: 600;
+  }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+    color: #777;
+    background: #111;
+    margin-top: 30px;
+  }
 </style>
 </head>
 <body>
@@ -224,27 +161,8 @@ footer {
   <div class="category" onclick="filterCategory('acessorios')">Acessórios</div>
 </div>
 
-<!-- Carrossel principal -->
-<div class="carousel-container">
-  <button class="carousel-btn left" onclick="scrollCarousel(-300)">‹</button>
-  <div class="carousel" id="products"></div>
-  <button class="carousel-btn right" onclick="scrollCarousel(300)">›</button>
-</div>
-
-<!-- Produtos variados com botão comprar -->
-<section class="varied-products" id="variedProducts"></section>
-
-<!-- Botão carrinho -->
-<button class="cart-btn" onclick="toggleCart()">Carrinho (<span id="cartCount">0</span>)</button>
-
-<!-- Modal carrinho -->
-<div id="cartModal">
-  <button class="close-cart" onclick="toggleCart()">Fechar</button>
-  <h2>Meu Carrinho</h2>
-  <div id="cartItems"></div>
-  <h3>Total: R$ <span id="cartTotal">0.00</span></h3>
-  <button class="close-cart" onclick="clearCart()">Limpar Carrinho</button>
-</div>
+<!-- Carrossel de produtos -->
+<section class="carousel" id="products"></section>
 
 <footer>
   <p>© 2025 Respect Style. Todos os direitos reservados.</p>
@@ -260,9 +178,33 @@ const produtos = [
   { id: 6, nome: "Kimono Kids", preco: 199.90, categoria: "kimonos", imagem: "https://via.placeholder.com/200x200?text=Kimono+Kids" }
 ];
 
-const produtosVaried = [
-  { id: 7, nome: "Protetor Bucal", preco: 29.90, imagem: "https://via.placeholder.com/150x150?text=Protetor+Bucal" },
-  { id: 8, nome: "Luvas de Treino", preco: 49.90, imagem: "https://via.placeholder.com/150x150?text=Luvas+Treino" },
-  { id: 9, nome: "Bandagem de Mão", preco: 19.90, imagem: "https://via.placeholder.com/150x150?text=Bandagem+Mão" },
-  { id: 10, nome: "Caneleira", preco: 39.90, imagem: "https://via.placeholder.com/150x150?text=Caneleira" },
-  { id: 11, nome: "Saco de Pancadas", preco: 299.90, imagem: "https://via.placeholder.com/150x150
+function renderProducts(lista) {
+  const container = document.getElementById('products');
+  container.innerHTML = '';
+  lista.forEach(p => {
+    container.innerHTML += `
+      <div class="product">
+        <img src="${p.imagem}" alt="${p.nome}">
+        <h3>${p.nome}</h3>
+        <p>R$ ${p.preco.toFixed(2)}</p>
+      </div>
+    `;
+  });
+}
+
+function filterCategory(cat) {
+  if (cat === 'todos') renderProducts(produtos);
+  else renderProducts(produtos.filter(p => p.categoria === cat));
+}
+
+function searchProducts() {
+  const termo = document.getElementById('searchInput').value.toLowerCase();
+  const filtrados = produtos.filter(p => p.nome.toLowerCase().includes(termo));
+  renderProducts(filtrados);
+}
+
+renderProducts(produtos);
+</script>
+
+</body>
+</html>
