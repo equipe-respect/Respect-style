@@ -1,413 +1,485 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Portal do Aluno • Respect Style (Mobile-ready)</title>
-<meta name="description" content="Área do aluno Respect Style — dashboards, horários, avisos, competições, graduados e aniversariantes." />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Respect Style • Portal Mobile</title>
+<meta name="description" content="Portal do aluno Respect Style — campeonatos, graduados, federações, horarios, eventos e redes sociais."/>
 <link rel="icon" href="../imagens/logo-respect-fav.png" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+  /* ========= Theme colors (preto / vermelho / dourado) ========= */
   :root{
-    --bg:#0e0e10; --card:#151517; --ring:#2a2a2e; --accent:#0aa30a; --red:#e50914;
-    --white:#fff; --muted:#cfd0d7;
+    --bg: #070707;
+    --panel: #0f0f10;
+    --muted: #bfbfbf;
+    --accent-red: #c51b1b;
+    --accent-red-2: #9f1111;
+    --gold: #d4af37;
+    --glass: rgba(212,175,55,0.06);
+    --safe-area-bottom: env(safe-area-inset-bottom, 12px);
   }
+
+  /* ========= Base ========= */
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:'Inter',system-ui,Roboto,Arial,sans-serif;background:var(--bg);color:var(--white);-webkit-font-smoothing:antialiased}
-  a{text-decoration:none;color:inherit}
-  img{max-width:100%;display:block}
+  html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font-family:inherit}
 
-  /* topbar */
+  /* ========= Container ========= */
+  .app{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ========= Topbar ========= */
   .topbar{
-    position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
-    padding:10px 14px;border-bottom:1px solid var(--ring);background:rgba(10,10,10,0.6);backdrop-filter:blur(6px)
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    background:linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+    position:sticky;top:0;z-index:40;
   }
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{width:44px;height:44px;border-radius:8px;border:2px solid var(--red);object-fit:cover;flex-shrink:0}
-  .title{font-weight:700;font-size:1rem;line-height:1}
-  .muted-title{font-size:12px;color:var(--muted)}
-
-  .top-actions{display:flex;align-items:center;gap:8px}
-  .btn{padding:8px 10px;border-radius:10px;border:1px solid var(--ring);background:transparent;color:var(--white);font-weight:700;cursor:pointer;font-size:13px}
-  .btn.small{padding:6px 8px;font-size:12px}
-  .user-pill{display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02)}
-
-  /* layout */
-  .layout{display:flex;min-height:calc(100vh - 64px)}
-  .sidebar{
-    width:260px;background:linear-gradient(180deg,#151517,#0f0f11);border-right:1px solid var(--ring);
-    padding:16px;display:flex;flex-direction:column;gap:12px;transition:transform .22s ease;
+  .brand{
+    display:flex;align-items:center;gap:10px;
   }
-  .nav-item{padding:12px;border-radius:10px;cursor:pointer;font-size:14px}
-  .nav-item:hover{background:rgba(255,255,255,0.02)}
-  .nav-item.active{background:rgba(10,163,10,0.08);border:1px solid rgba(10,163,10,0.06)}
-  .profile{margin-top:auto;padding-top:8px;border-top:1px solid var(--ring);display:flex;gap:12px;align-items:center}
+  .logo{
+    width:44px;height:44px;border-radius:10px;border:2px solid var(--accent-red);object-fit:cover;
+  }
+  .brand .title{
+    font-weight:700;font-size:1rem;line-height:1;
+  }
+  .brand .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
 
-  .main{flex:1;padding:18px;display:flex;flex-direction:column;gap:14px;padding-bottom:96px /* espaço para bottom nav */;}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .card{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--ring)}
+  .top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .icon-btn{
+    background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:10px;color:var(--muted);
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:13px;
+  }
+
+  /* ========= Main content ========= */
+  main{flex:1;overflow:auto;padding:14px 12px 84px; /* bottom nav space */ }
+
+  .section{margin-bottom:14px}
+  .section h2{margin:0 0 8px;font-size:15px;color:var(--gold);font-weight:700}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.03);
+  }
   .muted{color:var(--muted);font-size:13px}
-  .small{font-size:13px;color:var(--muted)}
 
-  /* swiper */
-  .comp-section{margin-top:6px}
-  .swiper{padding:8px 6px}
-  .swiper-slide{background:var(--card);border-radius:10px;padding:12px;border:1px solid var(--ring);display:flex;flex-direction:column;gap:8px}
-  .comp-date{font-size:13px;color:var(--muted)}
-  .comp-title{font-weight:800}
+  /* ========= Competitions (carousel-like horizontal) ========= */
+  .comp-list{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+  .comp-item{
+    min-width:240px;flex:0 0 auto;background:var(--panel);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.03);
+    box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  }
+  .comp-item h3{margin:0 0 6px;font-size:15px;color:var(--gold)}
+  .comp-item p{margin:0 0 8px;color:var(--muted);font-size:13px}
+  .comp-item .btn{
+    display:inline-block;padding:8px 10px;border-radius:10px;background:linear-gradient(90deg,var(--accent-red),var(--accent-red-2));color:white;font-weight:700;font-size:13px;border:none;cursor:pointer;
+  }
 
-  /* graduates */
-  .graduates-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto;padding-right:6px}
-  .grad-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.02)}
+  /* ========= Graduates list ========= */
+  .graduates-list{display:flex;flex-direction:column;gap:8px}
+  .grad-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+  .grad-row .left{display:flex;flex-direction:column}
+  .grad-row .name{font-weight:700}
+  .grad-row .meta{font-size:13px;color:var(--muted)}
 
-  /* links */
-  .links-list{display:flex;flex-direction:column;gap:8px}
+  /* ========= Federations & social links ========= */
+  .link-grid{display:flex;gap:8px;flex-wrap:wrap}
+  .link-card{flex:1 1 48%;min-width:140px;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(212,175,55,0.03), transparent);border:1px solid rgba(212,175,55,0.06);color:var(--muted);font-weight:700;font-size:13px}
+  .social-row{display:flex;gap:10px;align-items:center}
+  .social-btn{
+    display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);font-weight:700;cursor:pointer;font-size:13px
+  }
 
-  /* bottom nav for mobile */
+  /* ========= Quick schedule & presence ========= */
+  .session-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);margin-bottom:8px}
+  .session-row .when{font-size:13px;color:var(--muted)}
+  .session-row .pres-btn{padding:8px 10px;border-radius:10px;background:var(--gold);border:none;color:#080808;font-weight:800;cursor:pointer}
+
+  /* ========= Notices / Events ========= */
+  .notice{padding:10px;border-radius:10px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.02);margin-bottom:8px}
+  .event-title{font-weight:700;color:var(--gold);font-size:14px}
+
+  /* ========= Footer / bottom nav ========= */
   .bottom-nav{
-    position:fixed; left:8px; right:8px; bottom:10px; z-index:120;
-    background:linear-gradient(180deg,#0f0f11,#0b0b0b); border-radius:12px; border:1px solid var(--ring);
-    display:flex; gap:6px; padding:8px; justify-content:space-around; align-items:center; box-shadow:0 8px 20px rgba(0,0,0,.6);
+    position:fixed;left:12px;right:12px;bottom:calc(var(--safe-area-bottom) + 8px);height:64px;background:linear-gradient(180deg,#0b0b0b,#0f0f10);
+    border-radius:14px;display:flex;align-items:center;justify-content:space-around;padding:8px;border:1px solid rgba(255,255,255,0.03);z-index:60;box-shadow:0 8px 26px rgba(0,0,0,0.6)
   }
-  .bottom-nav button{
-    background:transparent;border:none;color:var(--muted);font-weight:700;padding:10px 8px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;font-size:12px;
-    min-width:56px;
-  }
-  .bottom-nav button svg{width:18px;height:18px;margin-bottom:4px;opacity:.9}
-  .bottom-nav button.active{color:var(--accent);box-shadow:inset 0 -3px 0 rgba(10,163,10,0.08);border-radius:8px}
+  .nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-weight:700;font-size:12px;background:transparent;border:none;cursor:pointer}
+  .nav-btn svg{width:18px;height:18px}
+  .nav-btn.active{color:var(--gold)}
+  .badge{background:var(--accent-red);padding:2px 6px;border-radius:999px;color:white;font-weight:800;font-size:12px;margin-left:6px}
 
-  /* helpers */
-  .hidden{display:none}
-  input.input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--ring);background:#0b0b0b;color:var(--white)}
-
-  /* responsive rules - MOBILE */
-  @media (max-width: 880px){
-    .grid{grid-template-columns:repeat(2,1fr)}
-    .sidebar{width:220px}
-  }
-  @media (max-width: 720px){
-    /* off-canvas sidebar by default */
-    .layout{flex-direction:column}
-    .sidebar{
-      position:fixed; left:0; top:56px; bottom:0; width:240px; transform:translateX(-120%);
-      box-shadow: 6px 0 20px rgba(0,0,0,.6); z-index:140; padding:12px;
-    }
-    .sidebar.open { transform:translateX(0); }
-    .main{padding:12px;margin-bottom:0}
-    .grid{grid-template-columns:1fr; gap:12px}
-    .card{padding:12px}
-    .logo{width:40px;height:40px}
-    .title{font-size:0.95rem}
-    .top-actions .btn{display:none} /* hide desktop action buttons to save space */
-    .top-actions .btn.mobile-show{display:inline-block}
-    .bottom-nav{display:flex}
-    /* hamburger always visible on mobile */
-    #hamburgerBtn{display:inline-block}
+  /* ========= Responsive tweaks ========= */
+  @media(min-width:720px){
+    main{padding:18px 28px 120px}
+    .comp-item{min-width:280px}
+    .card{padding:16px}
   }
 
-  @media (prefers-reduced-motion: reduce){
-    *{transition:none!important}
-  }
+  /* accessibility focus */
+  .nav-btn:focus,.icon-btn:focus,.comp-item:focus{outline:3px solid rgba(212,175,55,0.12);outline-offset:3px}
 </style>
 </head>
 <body>
-
-  <div class="topbar" role="banner">
-    <div class="brand">
-      <!-- hamburger (mobile) -->
-      <button id="hamburgerBtn" class="btn small" aria-label="Abrir menu" style="display:none">☰</button>
-      <img
-        class="logo"
-        src="../imagens/logo-respect.png"
-        srcset="../imagens/logo-respect.png 1x, ../imagens/logo-respect@2x.png 2x"
-        alt="Respect Style"
-        loading="lazy"
-        decoding="async"
-        onerror="this.onerror=null;this.src='https://via.placeholder.com/160x160?text=Logo';"
-      >
-      <div>
-        <div class="title">Respect Style</div>
-        <div class="muted-title">Portal do Aluno</div>
-      </div>
-    </div>
-
-    <div class="top-actions" role="navigation" aria-label="Ações principais">
-      <a class="btn mobile-show" id="openShopBtn" href="../loja/index.html" target="_blank" rel="noopener">Loja</a>
-      <a class="btn mobile-show" id="openSupport" href="https://wa.me/5599999999999" target="_blank" rel="noopener">Suporte</a>
-      <div id="authArea"></div>
-    </div>
-  </div>
-
-  <div class="layout" role="main">
-    <aside class="sidebar" id="sidebar" aria-label="menu">
-      <div>
-        <div class="nav-item active" data-view="dashboard">🏠 Dashboard</div>
-        <div class="nav-item" data-view="schedule">📅 Horários</div>
-        <div class="nav-item" data-view="notices">📢 Avisos</div>
-        <div class="nav-item" data-view="events">🎟️ Eventos</div>
-        <div class="nav-item" data-view="graduates">🎓 Graduados</div>
-        <div class="nav-item" data-view="birthdays">🎂 Aniversariantes</div>
-        <div class="nav-item" data-view="links">🔗 Federações</div>
-      </div>
-
-      <div class="profile">
-        <img id="sidebarAvatar" src="https://via.placeholder.com/64x64?text=?" alt="avatar" style="width:48px;height:48px;border-radius:8px;border:1px solid var(--ring);object-fit:cover">
+  <div class="app" id="app">
+    <!-- TOPBAR -->
+    <header class="topbar" role="banner">
+      <div class="brand">
+        <img class="logo" src="../imagens/logo-respect.png" alt="Respect Style" onerror="this.onerror=null;this.src='https://via.placeholder.com/160x160?text=Logo'">
         <div>
-          <div id="sidebarName" style="font-weight:700">Convidado</div>
-          <div id="sidebarEmail" class="small">Não autenticado</div>
-        </div>
-      </div>
-    </aside>
-
-    <section class="main" id="mainContent">
-      <!-- Dashboard -->
-      <div id="view-dashboard">
-        <div class="grid">
-          <div class="card">
-            <h3>Competições Próximas</h3>
-            <div class="muted">Participe e confira as datas</div>
-            <div class="comp-section">
-              <div class="swiper mySwiper">
-                <div class="swiper-wrapper" id="competitionsWrapper"></div>
-                <div class="swiper-button-next" aria-label="Próximo"></div>
-                <div class="swiper-button-prev" aria-label="Anterior"></div>
-                <div class="swiper-pagination"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Alunos Graduados</h3>
-            <div class="muted">Últimas graduações</div>
-            <div style="margin-top:8px">
-              <input id="searchGraduate" class="input" placeholder="Buscar por nome ou faixa" />
-              <div class="graduates-list" id="graduatesList" style="margin-top:10px"></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>Aniversariantes do Mês</h3>
-            <div class="muted">Celebre com a galera</div>
-            <div class="birth-list" id="birthdaysList" style="margin-top:12px"></div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
-          <div class="card" style="flex:1;min-width:260px">
-            <h3>Horários Rápidos</h3>
-            <div class="muted">Confirme presença rapidamente</div>
-            <div id="quickSchedule" style="margin-top:10px"></div>
-          </div>
-
-          <div class="card" style="width:360px;min-width:220px">
-            <h3>Links Úteis — Federações</h3>
-            <div class="muted">Acesso direto</div>
-            <div class="links-list" id="federationsList" style="margin-top:10px"></div>
-          </div>
+          <div class="title">Respect Style</div>
+          <div class="subtitle">Portal do Aluno</div>
         </div>
       </div>
 
-      <!-- Other views -->
-      <div id="view-schedule" class="hidden"><div class="card"><h3>Horários da Semana</h3><div id="fullSchedule" style="margin-top:12px"></div></div></div>
-      <div id="view-notices" class="hidden"><div class="card"><h3>Avisos</h3><div id="allNotices" style="margin-top:12px"></div></div></div>
-      <div id="view-events" class="hidden"><div class="card"><h3>Eventos</h3><div id="eventsList" style="margin-top:12px"></div></div></div>
-      <div id="view-graduates" class="hidden"><div class="card"><h3>Todos os Graduados</h3><div id="graduatesFull" style="margin-top:12px"></div></div></div>
-      <div id="view-birthdays" class="hidden"><div class="card"><h3>Aniversariantes</h3><div id="birthdaysFull" style="margin-top:12px"></div></div></div>
-      <div id="view-links" class="hidden"><div class="card"><h3>Federações e Confederações</h3><div id="linksFull" style="margin-top:12px"></div></div></div>
-    </section>
+      <div class="top-actions" role="navigation" aria-label="Ações">
+        <button class="icon-btn" id="btnSearch" title="Buscar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="6" stroke-width="1.6"/><path d="M21 21l-4.35-4.35" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        <button class="icon-btn" id="btnContact" title="WhatsApp">WhatsApp</button>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main role="main" id="main">
+
+      <!-- Competitions -->
+      <section class="section">
+        <h2>Campeonatos</h2>
+        <div class="card">
+          <div class="muted">Próximas datas e inscrições</div>
+          <div class="comp-list" id="compList" aria-live="polite">
+            <!-- JS will inject competition cards -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Graduates -->
+      <section class="section">
+        <h2>Alunos Graduados</h2>
+        <div class="card">
+          <div class="muted">Últimas graduações</div>
+          <div style="height:8px"></div>
+          <div class="graduates-list" id="graduatesList">
+            <!-- JS inject -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Federations -->
+      <section class="section">
+        <h2>Federações</h2>
+        <div class="card">
+          <div class="muted">Links oficiais</div>
+          <div style="height:8px"></div>
+          <div class="link-grid" id="federationsGrid"></div>
+        </div>
+      </section>
+
+      <!-- Social & Contact -->
+      <section class="section">
+        <h2>Redes Sociais</h2>
+        <div class="card">
+          <div class="muted">Siga nossas redes e entre em contato</div>
+          <div style="height:10px"></div>
+          <div class="social-row" id="socialsRow">
+            <!-- JS inject -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick schedule & presence -->
+      <section class="section">
+        <h2>Horários & Presença</h2>
+        <div class="card">
+          <div class="muted">Marque sua presença rápido</div>
+          <div style="height:8px"></div>
+          <div id="scheduleList"></div>
+        </div>
+      </section>
+
+      <!-- Notices & Events -->
+      <section class="section">
+        <h2>Avisos & Eventos</h2>
+        <div class="card">
+          <div id="noticesList"></div>
+          <div id="eventsList"></div>
+        </div>
+      </section>
+
+      <!-- Birthdays -->
+      <section class="section">
+        <h2>Aniversariantes</h2>
+        <div class="card">
+          <div id="birthdaysList"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" role="navigation" aria-label="Navegação principal">
+      <button class="nav-btn active" data-view="dashboard" aria-label="Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 12v7a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Início
+      </button>
+
+      <button class="nav-btn" data-view="competitions" aria-label="Campeonatos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="9" r="4" stroke-width="1.6"/><path d="M5 20h14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Campeonatos
+      </button>
+
+      <button class="nav-btn" data-view="graduates" aria-label="Graduados">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l7 4-7 4-7-4 7-4z" stroke-width="1.6"/><path d="M5 10v6a7 7 0 0 0 14 0v-6" stroke-width="1.6"/></svg>
+        Graduados
+      </button>
+
+      <button class="nav-btn" data-view="links" aria-label="Federações">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h6M15 12h6M8 6l8 12" stroke-width="1.6"/></svg>
+        Links
+      </button>
+
+      <button class="nav-btn" data-view="contact" aria-label="Contato">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 8V7a2 2 0 0 0-2-2h-3" stroke-width="1.6"/><path d="M3 8v8a2 2 0 0 0 2 2h14" stroke-width="1.6"/></svg>
+        Contato
+      </button>
+    </nav>
+
   </div>
 
-  <!-- bottom nav (mobile) -->
-  <nav class="bottom-nav" id="bottomNav" aria-label="Navegação">
-    <button data-view="dashboard" class="active" title="Dashboard">
-      <!-- home icon -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 12v7a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Dashboard
-    </button>
-
-    <button data-view="schedule" title="Horários">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.6"/><path d="M16 2v4M8 2v4" stroke-width="1.6" stroke-linecap="round"/></svg>
-      Horários
-    </button>
-
-    <button data-view="events" title="Eventos">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3" stroke-width="1.6"/><path d="M19.4 15A7.7 7.7 0 0 0 20 12 7.7 7.7 0 0 0 12 4" stroke-width="1.6"/></svg>
-      Eventos
-    </button>
-
-    <button data-view="graduates" title="Graduados">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l7 4-7 4-7-4 7-4z" stroke-width="1.6"/><path d="M5 10v6a7 7 0 0 0 14 0v-6" stroke-width="1.6"/></svg>
-      Graduados
-    </button>
-
-    <button data-view="links" title="Federações">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h6M15 12h6M8 6l8 12" stroke-width="1.6"/></svg>
-      Federações
-    </button>
-  </nav>
-
-  <footer style="text-align:center;padding:16px;color:#777;background:transparent;margin-top:8px;">
-    © 2025 Respect Style. Todos os direitos reservados.
-  </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script>
-/* ========== DATA ========== */
-const COMPETITIONS = [
-  { id:'c1', date:'2025-11-10', title:'Copa Estadual de Jiu-Jitsu', location:'Ginásio Municipal', link:'#' },
-  { id:'c2', date:'2025-12-07', title:'Open Respect Cup', location:'Centro Esportivo', link:'#' },
-  { id:'c3', date:'2026-01-20', title:'Circuito Norte/Nordeste', location:'Ginásio Regional', link:'#' }
-];
-const GRADUATES = [
-  { id:'g1', name:'Carlos Silva', grade:'Faixa Azul', date:'2025-08-12' },
-  { id:'g2', name:'Mariana Souza', grade:'Faixa Roxa', date:'2025-09-22' },
-  { id:'g3', name:'Felipe Costa', grade:'Faixa Marrom', date:'2025-10-05' },
-  { id:'g4', name:'Ana Pereira', grade:'Faixa Preta', date:'2025-10-10' }
-];
-const STUDENTS = [
-  { id:'s1', name:'Carlos Silva', dob:'1995-10-12', email:'carlos@example.com' },
-  { id:'s2', name:'Mariana Souza', dob:'1992-11-05', email:'mariana@example.com' },
-  { id:'s3', name:'Felipe Costa', dob:'2000-10-25', email:'felipe@example.com' },
-  { id:'s4', name:'Ana Pereira', dob:'1990-10-03', email:'ana@example.com' },
-  { id:'s5', name:'Joao JM', dob:'1988-03-15', email:'jm@exemplo.com' }
-];
-const FEDERATIONS = [
-  { name:'CBJJ (Confederação Brasileira de Jiu-Jitsu)', url:'https://www.cbjj.com.br' },
-  { name:'CBJJE (Confederação Brasileira de Jiu-Jitsu Esportivo)', url:'https://www.cbjje.com.br' },
-  { name:'IBJJF', url:'https://ibjjf.com' }
-];
-const SESSIONS = [
-  { id:'t1', title:'Gi - Avançado', time:'Seg 19:00 - 20:30' },
-  { id:'t2', title:'NoGi - Técnicas', time:'Qua 19:00 - 20:30' },
-  { id:'t3', title:'Infantil', time:'Sáb 10:00 - 11:00' }
-];
+/* ========= Demo data ========= */
+const DATA = {
+  competitions: [
+    { id:'c1', date:'2025-11-10', title:'Copa Estadual de Jiu-Jitsu', location:'Ginásio Municipal', desc:'Inscrições abertas até 01/11', link:'#' },
+    { id:'c2', date:'2025-12-07', title:'Open Respect Cup', location:'Centro Esportivo', desc:'Categorias infantil e adulto', link:'#' },
+    { id:'c3', date:'2026-01-20', title:'Circuito Norte/Nordeste', location:'Ginásio Regional', desc:'Equipes convidadas', link:'#' }
+  ],
+  graduates: [
+    { id:'g1', name:'Carlos Silva', grade:'Faixa Azul', date:'2025-08-12' },
+    { id:'g2', name:'Mariana Souza', grade:'Faixa Roxa', date:'2025-09-22' },
+    { id:'g3', name:'Felipe Costa', grade:'Faixa Marrom', date:'2025-10-05' },
+    { id:'g4', name:'Ana Pereira', grade:'Faixa Preta', date:'2025-10-10' }
+  ],
+  federations: [
+    { name:'CBJJ', url:'https://www.cbjj.com.br' },
+    { name:'CBJJE', url:'https://www.cbjje.com.br' },
+    { name:'IBJJF', url:'https://ibjjf.com' }
+  ],
+  socials: [
+    { name:'Instagram', url:'https://instagram.com', note:'@respectstyle' },
+    { name:'Facebook', url:'https://facebook.com', note:'Respect Style' },
+    { name:'YouTube', url:'https://youtube.com', note:'Respect Channel' },
+    { name:'WhatsApp', url:'https://wa.me/5599999999999', note:'+55 99 99999-9999' }
+  ],
+  sessions: [
+    { id:'s1', title:'Gi - Avançado', time:'Seg 19:00 - 20:30' },
+    { id:'s2', title:'NoGi - Técnicas', time:'Qua 19:00 - 20:30' },
+    { id:'s3', title:'Infantil', time:'Sáb 10:00 - 11:00' }
+  ],
+  notices: [
+    { id:'n1', title:'Feriado - Treino cancelado', text:'Não haverá aulas dia 15/11.' },
+    { id:'n2', title:'Vestuário oficial', text:'Camisetas novas disponíveis na loja.' }
+  ],
+  events: [
+    { id:'e1', title:'Treino especial com professor X', date:'2025-10-30', desc:'Treino aberto para convidados.' }
+  ],
+  students: [
+    { id:'s1', name:'Carlos Silva', dob:'1995-10-12', email:'carlos@example.com' },
+    { id:'s2', name:'Ana Pereira', dob:'1990-10-03', email:'ana@example.com' }
+  ]
+};
 
-/* ========== STATE KEYS ========== */
-const LS_USER = 'respect_user_v1';
-
-/* ========== HELPERS ========== */
-function escapeHtml(s=''){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
-function getStoredUser(){ try { return JSON.parse(localStorage.getItem(LS_USER)); } catch(e){ return null } }
-function setStoredUser(u){ localStorage.setItem(LS_USER, JSON.stringify(u)); }
-function clearUser(){ localStorage.removeItem(LS_USER); }
-
-/* ========== RENDER UI ========== */
-function renderAuthArea(){
-  const container = document.getElementById('authArea'); container.innerHTML = '';
-  const user = getStoredUser();
-  if(user){
-    const pill = document.createElement('div'); pill.className='user-pill'; pill.innerHTML = `<img src="${escapeHtml(user.avatar||'https://via.placeholder.com/48')}" alt="avatar" style="width:28px;height:28px;border-radius:6px"><div style="font-size:13px">${escapeHtml(user.name||'Aluno')}</div>`;
-    pill.addEventListener('click', ()=>{ if(confirm('Deseja sair?')) { clearUser(); renderAuthArea(); location.reload(); } });
-    container.appendChild(pill);
-    document.getElementById('sidebarName').innerText = user.name || 'Aluno';
-    document.getElementById('sidebarEmail').innerText = user.email || '';
-    document.getElementById('sidebarAvatar').src = user.avatar || 'https://via.placeholder.com/64';
-  } else {
-    const a = document.createElement('a'); a.className='btn'; a.href='login.html'; a.target='_blank'; a.rel='noopener'; a.innerText='Entrar';
-    container.appendChild(a);
-    document.getElementById('sidebarName').innerText = 'Convidado';
-    document.getElementById('sidebarEmail').innerText = 'Não autenticado';
-    document.getElementById('sidebarAvatar').src = 'https://via.placeholder.com/64x64?text=?';
-  }
+/* ========= Utilities ========= */
+function el(q){ return document.querySelector(q) }
+function elAll(q){ return Array.from(document.querySelectorAll(q)) }
+function create(tag, props={}, children=[]){
+  const e = document.createElement(tag);
+  Object.entries(props||{}).forEach(([k,v]) => { if(k==='class') e.className=v; else if(k==='html') e.innerHTML=v; else e.setAttribute(k,v); });
+  (Array.isArray(children)?children:[children]).forEach(c => { if(!c) return; if(typeof c === 'string') e.appendChild(document.createTextNode(c)); else e.appendChild(c); });
+  return e;
 }
 
-/* competitions swiper */
-let compSwiper;
-function initCompetitionsSwiper(){
-  const wrap = document.getElementById('competitionsWrapper'); if(!wrap) return;
-  wrap.innerHTML = '';
-  COMPETITIONS.forEach(c => {
-    const slide = document.createElement('div'); slide.className='swiper-slide';
-    slide.innerHTML = `<div style="font-size:13px;color:var(--muted)">${escapeHtml(c.date)}</div>
-      <div class="comp-title">${escapeHtml(c.title)}</div>
-      <div class="small">${escapeHtml(c.location)}</div>
-      <div style="margin-top:8px"><a class="btn small" href="${c.link||'#'}" target="_blank">Detalhes</a></div>`;
-    wrap.appendChild(slide);
+/* ========= Renderers ========= */
+function renderCompetitions(){
+  const wrap = el('#compList'); wrap.innerHTML = '';
+  DATA.competitions.forEach(c => {
+    const card = create('div',{class:'comp-item',tabindex:0});
+    card.appendChild(create('h3',{}, c.title));
+    card.appendChild(create('p',{}, `${c.date} • ${c.location}`));
+    card.appendChild(create('div',{class:'muted',html: c.desc}));
+    const btn = create('button',{class:'btn',type:'button'}, 'Inscrever');
+    btn.addEventListener('click', ()=> alert('Inscrição simulada: ' + c.title));
+    card.appendChild(create('div',{}, [document.createElement('div')]));
+    card.appendChild(btn);
+    wrap.appendChild(card);
   });
+}
 
-  try {
-    compSwiper = new Swiper('.mySwiper', {
-      slidesPerView: 1,
-      spaceBetween: 12,
-      loop: true,
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      breakpoints: { 420:{ slidesPerView: 1, spaceBetween:8 }, 720:{ slidesPerView:2 }, 1024:{ slidesPerView:3 } },
-      autoHeight: true
+function renderGraduates(){
+  const wrap = el('#graduatesList'); wrap.innerHTML = '';
+  DATA.graduates.forEach(g=>{
+    const row = create('div',{class:'grad-row'});
+    const left = create('div',{class:'left'});
+    left.appendChild(create('div',{class:'name'}, g.name));
+    left.appendChild(create('div',{class:'meta'}, `${g.grade} • ${g.date}`));
+    const right = create('div',{class:'right'});
+    const badge = create('div',{class:'muted'}, g.id);
+    right.appendChild(badge);
+    row.appendChild(left); row.appendChild(right);
+    wrap.appendChild(row);
+  });
+}
+
+function renderFederations(){
+  const wrap = el('#federationsGrid'); wrap.innerHTML='';
+  DATA.federations.forEach(f=>{
+    const a = create('a',{class:'link-card',href:f.url,target:'_blank',rel:'noopener noreferrer'});
+    a.innerHTML = `<div style="font-weight:800;color:var(--gold)">${escapeHtml(f.name)}</div><div class="muted" style="font-size:12px;margin-top:6px">${escapeHtml(f.url)}</div>`;
+    wrap.appendChild(a);
+  });
+}
+
+function renderSocials(){
+  const wrap = el('#socialsRow'); wrap.innerHTML='';
+  DATA.socials.forEach(s=>{
+    const a = create('a',{class:'social-btn',href:s.url,target:'_blank',rel:'noopener noreferrer'});
+    a.innerHTML = `<strong style="color:var(--gold)">${escapeHtml(s.name)}</strong><span style="color:var(--muted);font-size:13px">${escapeHtml(s.note)}</span>`;
+    wrap.appendChild(a);
+  });
+}
+
+function renderSchedule(){
+  const wrap = el('#scheduleList'); wrap.innerHTML='';
+  DATA.sessions.forEach(sess=>{
+    const row = create('div',{class:'session-row'});
+    row.innerHTML = `<div><div style="font-weight:800">${escapeHtml(sess.title)}</div><div class="when">${escapeHtml(sess.time)}</div></div>`;
+    const btn = create('button',{class:'pres-btn'},'Presença');
+    btn.addEventListener('click', ()=> {
+      // save presence in localStorage
+      const key = 'presence_'+sess.id;
+      const count = parseInt(localStorage.getItem(key) || '0',10) + 1;
+      localStorage.setItem(key, String(count));
+      alert('Presença registrada (demo): ' + sess.title);
     });
-  } catch(e){ console.warn('Swiper init falhou:', e); }
+    row.appendChild(btn);
+    wrap.appendChild(row);
+  });
 }
 
-/* graduates, birthdays, feds, schedule (same as before) */
-function renderGraduates(){ /* ...copied from previous implementation for brevity*/ 
-  const wrap = document.getElementById('graduatesList'); wrap.innerHTML = '';
-  GRADUATES.slice(0,20).forEach(g => {
-    const div = document.createElement('div'); div.className='grad-item';
-    div.innerHTML = `<div><strong>${escapeHtml(g.name)}</strong><div class="small">${escapeHtml(g.grade)} • ${escapeHtml(g.date)}</div></div><div class="small">${escapeHtml(g.id)}</div>`;
-    wrap.appendChild(div);
+function renderNotices(){
+  const wrap = el('#noticesList'); wrap.innerHTML='';
+  DATA.notices.forEach(n=>{
+    const d = create('div',{class:'notice'});
+    d.innerHTML = `<div style="font-weight:800;color:var(--gold)">${escapeHtml(n.title)}</div><div class="muted" style="margin-top:6px">${escapeHtml(n.text)}</div>`;
+    wrap.appendChild(d);
   });
-  const full = document.getElementById('graduatesFull'); full.innerHTML = '';
-  GRADUATES.forEach(g => {
-    const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escapeHtml(g.name)}</strong><div class="small">${escapeHtml(g.grade)} • ${escapeHtml(g.date)}</div></div>`;
-    full.appendChild(el);
-  });
-  document.getElementById('searchGraduate').addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase();
-    const items = GRADUATES.filter(x => x.name.toLowerCase().includes(q) || x.grade.toLowerCase().includes(q));
-    const w = document.getElementById('graduatesList'); w.innerHTML = '';
-    items.slice(0,50).forEach(g => {
-      const d = document.createElement('div'); d.className='grad-item'; d.innerHTML = `<div><strong>${escapeHtml(g.name)}</strong><div class="small">${escapeHtml(g.grade)} • ${escapeHtml(g.date)}</div></div>`;
-      w.appendChild(d);
-    });
+  const eventsWrap = el('#eventsList'); eventsWrap.innerHTML='';
+  DATA.events.forEach(ev=>{
+    const d = create('div',{class:'notice'});
+    d.innerHTML = `<div class="event-title">${escapeHtml(ev.title)}</div><div class="muted">${escapeHtml(ev.date)}</div><div style="margin-top:6px">${escapeHtml(ev.desc)}</div>`;
+    eventsWrap.appendChild(d);
   });
 }
+
 function renderBirthdays(){
-  const list = document.getElementById('birthdaysList'); const full = document.getElementById('birthdaysFull');
-  list.innerHTML = ''; full.innerHTML = ''; const now=new Date(); const month=now.getMonth()+1;
-  const birthdays = STUDENTS.filter(s => { if(!s.dob) return false; const parts=s.dob.split('-'); return parseInt(parts[1],10)===month; });
-  if(birthdays.length===0){ list.innerHTML='<div class="small muted">Nenhum aniversariante este mês.</div>'; }
-  else { birthdays.forEach(s => { const parts=s.dob.split('-'); const day=parts[2]; const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.name)}</strong><div class="small">Aniversário: ${day}/${(new Date(s.dob).getMonth()+1)}</div></div><div class="small">${escapeHtml(s.email)}</div>`; list.appendChild(el); }); }
-  STUDENTS.forEach(s => { const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.name)}</strong><div class="small">Nascimento: ${escapeHtml(s.dob)}</div></div><div class="small">${escapeHtml(s.email)}</div>`; full.appendChild(el); });
-}
-function renderFeds(){ const wrap=document.getElementById('federationsList'); wrap.innerHTML=''; FEDERATIONS.forEach(f=>{ const div=document.createElement('div'); div.className='grad-item'; div.innerHTML=`<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="small" style="word-break:break-all">${escapeHtml(f.url)}</div><div style="margin-top:6px"><a class="btn small" href="${f.url}" target="_blank">Abrir</a></div>`; wrap.appendChild(div); }); const full=document.getElementById('linksFull'); full.innerHTML=''; FEDERATIONS.forEach(f=>{ const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="small">${escapeHtml(f.url)}</div><div style="margin-top:6px"><a class="btn small" href="${f.url}" target="_blank">Abrir</a></div>`; full.appendChild(el); });}
-function renderQuickSchedule(){ const wrap=document.getElementById('quickSchedule'); wrap.innerHTML=''; SESSIONS.forEach(s=>{ const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.title)}</strong><div class="small">${escapeHtml(s.time)}</div></div><div><button class="btn small" onclick="markPresence('${s.id}')">Presença</button></div>`; wrap.appendChild(el); }); const full=document.getElementById('fullSchedule'); full.innerHTML=''; SESSIONS.forEach(s=>{ const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.title)}</strong><div class="small">${escapeHtml(s.time)}</div></div><div><button class="btn small" onclick="markPresence('${s.id}')">Marcar</button></div>`; full.appendChild(el); });}
-function markPresence(id){ const user=getStoredUser(); if(!user && !confirm('Você não está logado. Deseja marcar presença como convidado?')) return; const when=new Date(); alert('Presença marcada: ' + id + ' em ' + when.toLocaleString()); }
-
-/* view controller */
-function showView(name){
-  const views={dashboard:'view-dashboard',schedule:'view-schedule',notices:'view-notices',events:'view-events',graduates:'view-graduates',birthdays:'view-birthdays',links:'view-links'};
-  for(const k in views) document.getElementById(views[k]).classList.toggle('hidden', k!==name);
-  document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.classList.toggle('active', btn.getAttribute('data-view')===name));
-  document.querySelectorAll('.sidebar .nav-item').forEach(n=>n.classList.toggle('active', n.getAttribute('data-view')===name));
+  const wrap = el('#birthdaysList'); wrap.innerHTML='';
+  const month = new Date().getMonth() + 1;
+  DATA.students.forEach(s=>{
+    if(!s.dob) return;
+    const parts = s.dob.split('-'); if(parts.length<3) return;
+    const m = parseInt(parts[1],10);
+    if(m === month){
+      const d = create('div',{class:'notice'});
+      d.innerHTML = `<div style="font-weight:800">${escapeHtml(s.name)}</div><div class="muted">Aniversário: ${parts[2]}/${parts[1]}</div>`;
+      wrap.appendChild(d);
+    }
+  });
 }
 
-/* mobile UI helpers */
-function setupMobileControls(){
-  const hamburger=document.getElementById('hamburgerBtn');
-  const sidebar=document.getElementById('sidebar');
-  function updateControls(){ const isMobile=window.matchMedia('(max-width:720px)').matches; hamburger.style.display = isMobile ? 'inline-block' : 'none'; document.querySelectorAll('.top-actions .mobile-show').forEach(el=>el.style.display = isMobile ? 'inline-block' : 'none'); }
-  updateControls(); window.addEventListener('resize', updateControls);
-  hamburger.addEventListener('click', ()=>{ sidebar.classList.toggle('open'); });
-  document.querySelectorAll('.bottom-nav button').forEach(btn=>{ btn.addEventListener('click', ()=>{ const view=btn.getAttribute('data-view'); showView(view); sidebar.classList.remove('open'); }); });
-  document.addEventListener('click', (e)=>{ if(window.matchMedia('(max-width:720px)').matches){ const sb=document.getElementById('sidebar'); if(sb.classList.contains('open')){ if(!sb.contains(e.target) && !document.getElementById('hamburgerBtn').contains(e.target)){ sb.classList.remove('open'); } } } });
+/* ========= Navigation handling (bottom nav) ========= */
+function setupNavigation(){
+  const navBtns = elAll('.nav-btn');
+  navBtns.forEach(btn=>{
+    btn.addEventListener('click', (ev)=>{
+      navBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = btn.dataset.view;
+      // smooth scroll to section
+      switch(view){
+        case 'dashboard':
+          window.scrollTo({top:0,behavior:'smooth'}); break;
+        case 'competitions':
+          scrollToSection('Campeonatos'); break;
+        case 'graduates':
+          scrollToSection('Alunos Graduados'); break;
+        case 'links':
+          scrollToSection('Federações'); break;
+        case 'contact':
+          scrollToSection('Redes Sociais'); break;
+      }
+    });
+  });
+}
+function scrollToSection(titleText){
+  // find h2 with text
+  const h2s = Array.from(document.querySelectorAll('main h2'));
+  const target = h2s.find(h => h.textContent.trim().toLowerCase().includes(titleText.toLowerCase().split(' ')[0]));
+  if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-/* init */
-document.addEventListener('DOMContentLoaded', ()=>{
-  renderAuthArea();
-  initCompetitionsSwiper();
+/* ========= Misc ========= */
+function escapeHtml(s=''){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+function init(){
+  renderCompetitions();
   renderGraduates();
+  renderFederations();
+  renderSocials();
+  renderSchedule();
+  renderNotices();
   renderBirthdays();
-  renderFeds();
-  renderQuickSchedule();
-  setupMobileControls();
+  setupNavigation();
 
-  document.querySelectorAll('.nav-item').forEach(el=>el.addEventListener('click', ()=>{ document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); el.classList.add('active'); showView(el.getAttribute('data-view')); document.getElementById('sidebar').classList.remove('open'); }));
-  document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.addEventListener('click', ()=>{}));
-  showView('dashboard');
-});
+  // WhatsApp quick contact button
+  document.getElementById('btnContact').addEventListener('click', ()=> {
+    const phone = DATA.socials.find(s=>s.name.toLowerCase().includes('whats'))?.url || 'https://wa.me/5599999999999';
+    const text = encodeURIComponent('Olá, tenho interesse em informações da Respect Style (via portal).');
+    // open in new tab
+    window.open(phone.includes('wa.me') ? phone : `${phone}`, '_blank');
+  });
+
+  // quick search button (demo)
+  document.getElementById('btnSearch').addEventListener('click', ()=> {
+    const q = prompt('Buscar por nome/campeonato:');
+    if(!q) return;
+    // simple search: highlight matches descending order (competitions first)
+    const matchComp = DATA.competitions.filter(c=> (c.title+c.location+c.desc).toLowerCase().includes(q.toLowerCase()));
+    if(matchComp.length){
+      alert('Encontrado em Campeonatos: ' + matchComp.map(m=>m.title).join(', '));
+      return;
+    }
+    const matchGrad = DATA.graduates.filter(g => g.name.toLowerCase().includes(q.toLowerCase()));
+    if(matchGrad.length){
+      alert('Graduados encontrados: ' + matchGrad.map(m=>m.name).join(', '));
+      return;
+    }
+    alert('Nenhum resultado rápido (demo).');
+  });
+}
+
+/* ========= Boot ========= */
+document.addEventListener('DOMContentLoaded', init);
 </script>
+
 </body>
 </html>
