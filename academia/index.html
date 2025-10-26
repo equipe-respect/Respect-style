@@ -45,7 +45,7 @@
   .nav-item.active{background:rgba(10,163,10,0.08);border:1px solid rgba(10,163,10,0.06)}
   .profile{margin-top:auto;padding-top:8px;border-top:1px solid var(--ring);display:flex;gap:12px;align-items:center}
 
-  .main{flex:1;padding:18px;display:flex;flex-direction:column;gap:14px}
+  .main{flex:1;padding:18px;display:flex;flex-direction:column;gap:14px;padding-bottom:96px /* espaço para bottom nav */;}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .card{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--ring)}
   .muted{color:var(--muted);font-size:13px}
@@ -67,12 +67,16 @@
 
   /* bottom nav for mobile */
   .bottom-nav{
-    display:none; position:fixed; left:0; right:0; bottom:0; z-index:80;
-    background:linear-gradient(180deg,#0f0f11,#0b0b0b); border-top:1px solid var(--ring);
-    display:flex; gap:6px; padding:8px; justify-content:space-around; align-items:center;
+    position:fixed; left:8px; right:8px; bottom:10px; z-index:120;
+    background:linear-gradient(180deg,#0f0f11,#0b0b0b); border-radius:12px; border:1px solid var(--ring);
+    display:flex; gap:6px; padding:8px; justify-content:space-around; align-items:center; box-shadow:0 8px 20px rgba(0,0,0,.6);
   }
-  .bottom-nav button{background:transparent;border:none;color:var(--muted);font-weight:700;padding:8px 10px;border-radius:10px;cursor:pointer}
-  .bottom-nav button.active{color:var(--accent)}
+  .bottom-nav button{
+    background:transparent;border:none;color:var(--muted);font-weight:700;padding:10px 8px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;font-size:12px;
+    min-width:56px;
+  }
+  .bottom-nav button svg{width:18px;height:18px;margin-bottom:4px;opacity:.9}
+  .bottom-nav button.active{color:var(--accent);box-shadow:inset 0 -3px 0 rgba(10,163,10,0.08);border-radius:8px}
 
   /* helpers */
   .hidden{display:none}
@@ -84,14 +88,14 @@
     .sidebar{width:220px}
   }
   @media (max-width: 720px){
-    /* hide desktop sidebar visually (we still keep it accessible off-canvas) */
+    /* off-canvas sidebar by default */
     .layout{flex-direction:column}
     .sidebar{
       position:fixed; left:0; top:56px; bottom:0; width:240px; transform:translateX(-120%);
-      box-shadow: 6px 0 20px rgba(0,0,0,.6); z-index:120; padding:12px;
+      box-shadow: 6px 0 20px rgba(0,0,0,.6); z-index:140; padding:12px;
     }
     .sidebar.open { transform:translateX(0); }
-    .main{padding:12px;margin-bottom:64px}
+    .main{padding:12px;margin-bottom:0}
     .grid{grid-template-columns:1fr; gap:12px}
     .card{padding:12px}
     .logo{width:40px;height:40px}
@@ -99,6 +103,8 @@
     .top-actions .btn{display:none} /* hide desktop action buttons to save space */
     .top-actions .btn.mobile-show{display:inline-block}
     .bottom-nav{display:flex}
+    /* hamburger always visible on mobile */
+    #hamburgerBtn{display:inline-block}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -110,7 +116,7 @@
 
   <div class="topbar" role="banner">
     <div class="brand">
-      <!-- botão hamburguer mobile -->
+      <!-- hamburger (mobile) -->
       <button id="hamburgerBtn" class="btn small" aria-label="Abrir menu" style="display:none">☰</button>
       <img
         class="logo"
@@ -215,11 +221,31 @@
 
   <!-- bottom nav (mobile) -->
   <nav class="bottom-nav" id="bottomNav" aria-label="Navegação">
-    <button data-view="dashboard" class="active">Dashboard</button>
-    <button data-view="schedule">Horários</button>
-    <button data-view="events">Eventos</button>
-    <button data-view="graduates">Graduados</button>
-    <button data-view="links">Federações</button>
+    <button data-view="dashboard" class="active" title="Dashboard">
+      <!-- home icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 12v7a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Dashboard
+    </button>
+
+    <button data-view="schedule" title="Horários">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.6"/><path d="M16 2v4M8 2v4" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Horários
+    </button>
+
+    <button data-view="events" title="Eventos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3" stroke-width="1.6"/><path d="M19.4 15A7.7 7.7 0 0 0 20 12 7.7 7.7 0 0 0 12 4" stroke-width="1.6"/></svg>
+      Eventos
+    </button>
+
+    <button data-view="graduates" title="Graduados">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l7 4-7 4-7-4 7-4z" stroke-width="1.6"/><path d="M5 10v6a7 7 0 0 0 14 0v-6" stroke-width="1.6"/></svg>
+      Graduados
+    </button>
+
+    <button data-view="links" title="Federações">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12h6M15 12h6M8 6l8 12" stroke-width="1.6"/></svg>
+      Federações
+    </button>
   </nav>
 
   <footer style="text-align:center;padding:16px;color:#777;background:transparent;margin-top:8px;">
@@ -260,7 +286,6 @@ const SESSIONS = [
 
 /* ========== STATE KEYS ========== */
 const LS_USER = 'respect_user_v1';
-const LS_BLOCKED = 'respect_blocked_users_v1';
 
 /* ========== HELPERS ========== */
 function escapeHtml(s=''){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
@@ -315,21 +340,19 @@ function initCompetitionsSwiper(){
   } catch(e){ console.warn('Swiper init falhou:', e); }
 }
 
-/* graduates */
-function renderGraduates(){
+/* graduates, birthdays, feds, schedule (same as before) */
+function renderGraduates(){ /* ...copied from previous implementation for brevity*/ 
   const wrap = document.getElementById('graduatesList'); wrap.innerHTML = '';
   GRADUATES.slice(0,20).forEach(g => {
     const div = document.createElement('div'); div.className='grad-item';
     div.innerHTML = `<div><strong>${escapeHtml(g.name)}</strong><div class="small">${escapeHtml(g.grade)} • ${escapeHtml(g.date)}</div></div><div class="small">${escapeHtml(g.id)}</div>`;
     wrap.appendChild(div);
   });
-
   const full = document.getElementById('graduatesFull'); full.innerHTML = '';
   GRADUATES.forEach(g => {
     const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escapeHtml(g.name)}</strong><div class="small">${escapeHtml(g.grade)} • ${escapeHtml(g.date)}</div></div>`;
     full.appendChild(el);
   });
-
   document.getElementById('searchGraduate').addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase();
     const items = GRADUATES.filter(x => x.name.toLowerCase().includes(q) || x.grade.toLowerCase().includes(q));
@@ -340,117 +363,39 @@ function renderGraduates(){
     });
   });
 }
-
-/* birthdays */
 function renderBirthdays(){
   const list = document.getElementById('birthdaysList'); const full = document.getElementById('birthdaysFull');
-  list.innerHTML = ''; full.innerHTML = '';
-  const now = new Date(); const month = now.getMonth() + 1;
-  const birthdays = STUDENTS.filter(s => { if(!s.dob) return false; const parts = s.dob.split('-'); const m = parseInt(parts[1],10); return m === month; });
-  if(birthdays.length === 0){ list.innerHTML = '<div class="small muted">Nenhum aniversariante este mês.</div>'; }
-  else {
-    birthdays.forEach(s => {
-      const parts = s.dob.split('-'); const day = parts[2];
-      const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escapeHtml(s.name)}</strong><div class="small">Aniversário: ${day}/${(new Date(s.dob).getMonth()+1)}</div></div><div class="small">${escapeHtml(s.email)}</div>`;
-      list.appendChild(el);
-    });
-  }
-  STUDENTS.forEach(s => {
-    const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div><strong>${escapeHtml(s.name)}</strong><div class="small">Nascimento: ${escapeHtml(s.dob)}</div></div><div class="small">${escapeHtml(s.email)}</div>`;
-    full.appendChild(el);
-  });
+  list.innerHTML = ''; full.innerHTML = ''; const now=new Date(); const month=now.getMonth()+1;
+  const birthdays = STUDENTS.filter(s => { if(!s.dob) return false; const parts=s.dob.split('-'); return parseInt(parts[1],10)===month; });
+  if(birthdays.length===0){ list.innerHTML='<div class="small muted">Nenhum aniversariante este mês.</div>'; }
+  else { birthdays.forEach(s => { const parts=s.dob.split('-'); const day=parts[2]; const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.name)}</strong><div class="small">Aniversário: ${day}/${(new Date(s.dob).getMonth()+1)}</div></div><div class="small">${escapeHtml(s.email)}</div>`; list.appendChild(el); }); }
+  STUDENTS.forEach(s => { const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.name)}</strong><div class="small">Nascimento: ${escapeHtml(s.dob)}</div></div><div class="small">${escapeHtml(s.email)}</div>`; full.appendChild(el); });
 }
-
-/* federations */
-function renderFeds(){
-  const wrap = document.getElementById('federationsList'); wrap.innerHTML = '';
-  FEDERATIONS.forEach(f => {
-    const div = document.createElement('div'); div.className='grad-item';
-    div.innerHTML = `<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="small" style="word-break:break-all">${escapeHtml(f.url)}</div><div style="margin-top:6px"><a class="btn small" href="${f.url}" target="_blank">Abrir</a></div>`;
-    wrap.appendChild(div);
-  });
-  const full = document.getElementById('linksFull'); full.innerHTML = '';
-  FEDERATIONS.forEach(f => {
-    const el = document.createElement('div'); el.className='grad-item'; el.innerHTML = `<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="small">${escapeHtml(f.url)}</div><div style="margin-top:6px"><a class="btn small" href="${f.url}" target="_blank">Abrir</a></div>`;
-    full.appendChild(el);
-  });
-}
-
-/* quick schedule */
-function renderQuickSchedule(){
-  const wrap = document.getElementById('quickSchedule'); wrap.innerHTML = '';
-  SESSIONS.forEach(s => {
-    const el = document.createElement('div'); el.className='grad-item';
-    el.innerHTML = `<div><strong>${escapeHtml(s.title)}</strong><div class="small">${escapeHtml(s.time)}</div></div><div><button class="btn small" onclick="markPresence('${s.id}')">Presença</button></div>`;
-    wrap.appendChild(el);
-  });
-
-  const full = document.getElementById('fullSchedule'); full.innerHTML = '';
-  SESSIONS.forEach(s => {
-    const el = document.createElement('div'); el.className='grad-item';
-    el.innerHTML = `<div><strong>${escapeHtml(s.title)}</strong><div class="small">${escapeHtml(s.time)}</div></div><div><button class="btn small" onclick="markPresence('${s.id}')">Marcar</button></div>`;
-    full.appendChild(el);
-  });
-}
-function markPresence(id){
-  const user = getStoredUser();
-  if(!user && !confirm('Você não está logado. Deseja marcar presença como convidado?')) return;
-  const when = new Date();
-  alert('Presença marcada: ' + id + ' em ' + when.toLocaleString());
-}
+function renderFeds(){ const wrap=document.getElementById('federationsList'); wrap.innerHTML=''; FEDERATIONS.forEach(f=>{ const div=document.createElement('div'); div.className='grad-item'; div.innerHTML=`<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="small" style="word-break:break-all">${escapeHtml(f.url)}</div><div style="margin-top:6px"><a class="btn small" href="${f.url}" target="_blank">Abrir</a></div>`; wrap.appendChild(div); }); const full=document.getElementById('linksFull'); full.innerHTML=''; FEDERATIONS.forEach(f=>{ const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div style="font-weight:700">${escapeHtml(f.name)}</div><div class="small">${escapeHtml(f.url)}</div><div style="margin-top:6px"><a class="btn small" href="${f.url}" target="_blank">Abrir</a></div>`; full.appendChild(el); });}
+function renderQuickSchedule(){ const wrap=document.getElementById('quickSchedule'); wrap.innerHTML=''; SESSIONS.forEach(s=>{ const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.title)}</strong><div class="small">${escapeHtml(s.time)}</div></div><div><button class="btn small" onclick="markPresence('${s.id}')">Presença</button></div>`; wrap.appendChild(el); }); const full=document.getElementById('fullSchedule'); full.innerHTML=''; SESSIONS.forEach(s=>{ const el=document.createElement('div'); el.className='grad-item'; el.innerHTML=`<div><strong>${escapeHtml(s.title)}</strong><div class="small">${escapeHtml(s.time)}</div></div><div><button class="btn small" onclick="markPresence('${s.id}')">Marcar</button></div>`; full.appendChild(el); });}
+function markPresence(id){ const user=getStoredUser(); if(!user && !confirm('Você não está logado. Deseja marcar presença como convidado?')) return; const when=new Date(); alert('Presença marcada: ' + id + ' em ' + when.toLocaleString()); }
 
 /* view controller */
 function showView(name){
-  const views = { dashboard:'view-dashboard', schedule:'view-schedule', notices:'view-notices', events:'view-events', graduates:'view-graduates', birthdays:'view-birthdays', links:'view-links' };
-  for(const k in views) document.getElementById(views[k]).classList.toggle('hidden', k !== name);
-  // highlight bottom nav
-  document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-view') === name));
-  // highlight sidebar nav
-  document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.toggle('active', n.getAttribute('data-view') === name));
+  const views={dashboard:'view-dashboard',schedule:'view-schedule',notices:'view-notices',events:'view-events',graduates:'view-graduates',birthdays:'view-birthdays',links:'view-links'};
+  for(const k in views) document.getElementById(views[k]).classList.toggle('hidden', k!==name);
+  document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.classList.toggle('active', btn.getAttribute('data-view')===name));
+  document.querySelectorAll('.sidebar .nav-item').forEach(n=>n.classList.toggle('active', n.getAttribute('data-view')===name));
 }
 
 /* mobile UI helpers */
 function setupMobileControls(){
-  const hamburger = document.getElementById('hamburgerBtn');
-  const sidebar = document.getElementById('sidebar');
-  const bottomNav = document.getElementById('bottomNav');
-
-  function updateControls(){
-    const isMobile = window.matchMedia('(max-width:720px)').matches;
-    document.getElementById('hamburgerBtn').style.display = isMobile ? 'inline-block' : 'none';
-    // show desktop top actions on desktop only
-    document.querySelectorAll('.top-actions .mobile-show').forEach(el => { el.style.display = isMobile ? 'inline-block' : 'none' });
-  }
-  updateControls();
-  window.addEventListener('resize', updateControls);
-
-  hamburger.addEventListener('click', ()=> { sidebar.classList.toggle('open'); });
-
-  // bottom nav clicks
-  document.querySelectorAll('.bottom-nav button').forEach(btn => {
-    btn.addEventListener('click', ()=> {
-      const view = btn.getAttribute('data-view'); showView(view);
-      // close sidebar if open (mobile)
-      document.getElementById('sidebar').classList.remove('open');
-    });
-  });
-
-  // allow tapping outside to close sidebar on mobile
-  document.addEventListener('click', (e) => {
-    if(window.matchMedia('(max-width:720px)').matches){
-      const sb = document.getElementById('sidebar');
-      if(sb.classList.contains('open')){
-        const panel = sb;
-        if(!panel.contains(e.target) && !document.getElementById('hamburgerBtn').contains(e.target)){
-          panel.classList.remove('open');
-        }
-      }
-    }
-  });
+  const hamburger=document.getElementById('hamburgerBtn');
+  const sidebar=document.getElementById('sidebar');
+  function updateControls(){ const isMobile=window.matchMedia('(max-width:720px)').matches; hamburger.style.display = isMobile ? 'inline-block' : 'none'; document.querySelectorAll('.top-actions .mobile-show').forEach(el=>el.style.display = isMobile ? 'inline-block' : 'none'); }
+  updateControls(); window.addEventListener('resize', updateControls);
+  hamburger.addEventListener('click', ()=>{ sidebar.classList.toggle('open'); });
+  document.querySelectorAll('.bottom-nav button').forEach(btn=>{ btn.addEventListener('click', ()=>{ const view=btn.getAttribute('data-view'); showView(view); sidebar.classList.remove('open'); }); });
+  document.addEventListener('click', (e)=>{ if(window.matchMedia('(max-width:720px)').matches){ const sb=document.getElementById('sidebar'); if(sb.classList.contains('open')){ if(!sb.contains(e.target) && !document.getElementById('hamburgerBtn').contains(e.target)){ sb.classList.remove('open'); } } } });
 }
 
 /* init */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', ()=>{
   renderAuthArea();
   initCompetitionsSwiper();
   renderGraduates();
@@ -459,16 +404,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderQuickSchedule();
   setupMobileControls();
 
-  // nav items
-  document.querySelectorAll('.nav-item').forEach(el => el.addEventListener('click', ()=> {
-    document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-    el.classList.add('active');
-    showView(el.getAttribute('data-view'));
-    // close mobile sidebar automatically
-    document.getElementById('sidebar').classList.remove('open');
-  }));
-
-  // set default view
+  document.querySelectorAll('.nav-item').forEach(el=>el.addEventListener('click', ()=>{ document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); el.classList.add('active'); showView(el.getAttribute('data-view')); document.getElementById('sidebar').classList.remove('open'); }));
+  document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.addEventListener('click', ()=>{}));
   showView('dashboard');
 });
 </script>
