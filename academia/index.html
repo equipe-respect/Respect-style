@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Portal do Aluno • Respect Style (Sem Overlays)</title>
 <meta name="description" content="Área do aluno Respect Style — dashboards, horários, avisos, competições, graduados e aniversariantes." />
+
+<!-- FAVICON atualizado -->
+<link rel="icon" href="../imagens/logo-respect-fav.png" type="image/png">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <!-- Swiper (carrossel de competições) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
@@ -22,7 +26,10 @@
   /* Topbar */
   .topbar{position:sticky;top:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--ring);background:rgba(10,10,10,0.6);backdrop-filter:blur(6px)}
   .brand{display:flex;gap:12px;align-items:center}
-  .brand img{width:44px;height:44px;border-radius:10px;border:2px solid var(--red);object-fit:cover}
+  /* Assegurei espaço estável para a logo */
+  .brand .logo{
+    width:48px;height:48px;border-radius:10px;border:2px solid var(--red);object-fit:cover;flex-shrink:0;
+  }
   .title{font-weight:700}
   .top-actions{display:flex;gap:8px;align-items:center}
   .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--ring);background:transparent;color:var(--white);font-weight:700;cursor:pointer}
@@ -76,7 +83,16 @@
 
   <div class="topbar" role="banner">
     <div class="brand">
-      <img src="../imagens/logo-respect.png" alt="Respect Style" onerror="this.src='https://via.placeholder.com/80x80?text=Logo'">
+      <!-- Logo principal (com srcset para retina). Troque o caminho se necessário -->
+      <img
+        class="logo"
+        src="../imagens/logo-respect.png"
+        srcset="../imagens/logo-respect.png 1x, ../imagens/logo-respect@2x.png 2x"
+        alt="Respect Style"
+        loading="lazy"
+        decoding="async"
+        onerror="this.onerror=null;this.src='https://via.placeholder.com/160x160?text=Logo';"
+      >
       <div>
         <div class="title">Respect Style</div>
         <div class="muted">Portal do Aluno</div>
@@ -84,11 +100,10 @@
     </div>
 
     <div class="top-actions" role="navigation">
-      <!-- Loja agora abre em nova aba para evitar overlays -->
+      <!-- Loja abre em nova aba -->
       <a class="btn" id="openShopBtn" href="../loja/index.html" target="_blank" rel="noopener">Loja</a>
       <a class="btn" id="openSupport" href="https://wa.me/5599999999999" target="_blank" rel="noopener">Suporte</a>
       <div id="authArea"></div>
-      <!-- removido: botão de bloqueio baseado em diálogo/modal -->
     </div>
   </div>
 
@@ -165,39 +180,32 @@
         </div>
       </div>
 
-      <!-- Schedule view -->
+      <!-- Other views hidden by default -->
       <div id="view-schedule" class="hidden">
         <div class="card"><h3>Horários da Semana</h3><div class="muted">Marque presença nas aulas</div><div id="fullSchedule" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Notices view -->
       <div id="view-notices" class="hidden">
         <div class="card"><h3>Avisos</h3><div id="allNotices" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Events (detalhe) -->
       <div id="view-events" class="hidden">
         <div class="card"><h3>Eventos</h3><div id="eventsList" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Graduates view -->
       <div id="view-graduates" class="hidden">
         <div class="card"><h3>Todos os Graduados</h3><div id="graduatesFull" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Birthdays view -->
       <div id="view-birthdays" class="hidden">
         <div class="card"><h3>Aniversariantes</h3><div id="birthdaysFull" style="margin-top:12px"></div></div>
       </div>
 
-      <!-- Links view -->
       <div id="view-links" class="hidden">
         <div class="card"><h3>Federações e Confederações</h3><div id="linksFull" style="margin-top:12px"></div></div>
       </div>
     </section>
   </div>
-
-  <!-- Observação: Modal removidos. Entrar e Loja abrem em nova aba/páginas separadas -->
 
   <footer style="text-align:center;padding:18px;color:#777;background:transparent;margin-top:30px;">
     © 2025 Respect Style. Todos os direitos reservados.
@@ -275,9 +283,6 @@
         el.classList.add('active');
         showView(el.getAttribute('data-view'));
       }));
-
-      // top actions: Loja and Support are links (no modal)
-      document.getElementById('openSupport').addEventListener('click', ()=>{}); // already an anchor
 
       // render sections
       initCompetitionsSwiper();
@@ -485,4 +490,4 @@
     window._respect = { setStoredUser, getStoredUser, clearUser, addBlocked, getBlockedList, isBlocked };
   </script>
 </body>
-</html>
+              </html>
