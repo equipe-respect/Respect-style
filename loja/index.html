@@ -1,210 +1,442 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Respect Style • Loja Oficial</title>
 <link rel="icon" href="logo.png">
 <style>
-  body {
-    margin: 0;
+  :root{
+    --bg: #111;
+    --card: #1a1a1a;
+    --accent: #FFD700; /* dourado */
+    --red-dark: #8B0000;
+    --red: #FF0000;
+    --text: #fff;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
     font-family: 'Poppins', sans-serif;
-    background: #111; /* fundo preto */
-    color: #fff;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing:antialiased;
   }
 
-  header {
-    background: linear-gradient(90deg, #8B0000, #FF0000); /* vermelho degradê */
-    color: #FFD700; /* dourado */
-    padding: 15px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+  header{
+    background: linear-gradient(90deg,var(--red-dark),var(--red));
+    color: var(--accent);
+    padding:15px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  header h1{margin:0;font-size:1.3rem}
+  .back-btn{
+    position:absolute;
+    left:10px; top:12px;
+    background:var(--accent);
+    color:var(--bg);
+    padding:6px 12px;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
   }
 
-  header h1 {
-    margin: 0;
-    font-size: 1.4rem;
+  /* search & categories */
+  .search-box{margin:15px;display:flex;gap:0}
+  .search-box input{
+    flex:1;padding:10px;border-radius:10px 0 0 10px;border:1px solid var(--accent);
+    background:#222;color:var(--text);
+  }
+  .search-box button{
+    padding:10px 15px;border:none;background:var(--accent);color:var(--bg);border-radius:0 10px 10px 0;cursor:pointer;
   }
 
-  .back-btn {
-    position: absolute;
-    left: 10px;
-    top: 12px;
-    background: #FFD700; /* dourado */
-    color: #111;
-    padding: 5px 12px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    text-decoration: none;
-    cursor: pointer;
+  .categories{
+    display:flex;overflow-x:auto;gap:10px;padding:10px;background:transparent;
+  }
+  .categories::-webkit-scrollbar{display:none}
+  .category{
+    flex:0 0 auto;background:var(--red-dark);color:var(--accent);padding:8px 14px;border-radius:20px;cursor:pointer;
+    white-space:nowrap;font-weight:600;transition:transform .15s,background .15s;
+  }
+  .category:hover{transform:scale(1.05);background:var(--red)}
+
+  /* carousel */
+  .carousel-container{position:relative;margin-top:6px}
+  .carousel{
+    display:flex;overflow-x:auto;gap:16px;padding:14px;scroll-behavior:smooth;
+  }
+  .carousel::-webkit-scrollbar{display:none}
+  .carousel-btn{
+    position:absolute;top:50%;transform:translateY(-50%);background:var(--accent);border:none;color:var(--bg);
+    padding:10px;border-radius:50%;cursor:pointer;z-index:20;box-shadow:0 4px 12px rgba(0,0,0,.4);
+  }
+  .carousel-btn.left{left:8px}
+  .carousel-btn.right{right:8px}
+
+  .product{
+    min-width:190px;background:var(--card);border-radius:14px;padding:10px;text-align:center;flex-shrink:0;
+    box-shadow:0 6px 18px rgba(0,0,0,.5);transition:transform .15s;
+  }
+  .product:hover{transform:translateY(-6px)}
+  .product img{width:100%;height:150px;object-fit:cover;border-radius:8px}
+  .product h3{font-size:1rem;margin:8px 0 6px}
+  .product p{color:var(--accent);font-weight:700;margin:0}
+
+  /* GRID de produtos variados (like shop/shein) */
+  .section-title{padding:0 16px;color:var(--accent);font-weight:700;margin-top:6px}
+  .varied-products{
+    padding:12px;display:grid;gap:14px;
+    grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+  }
+  .varied-card{
+    background:var(--card);border-radius:12px;padding:10px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.5);
+    display:flex;flex-direction:column;gap:8px;justify-content:space-between;
+  }
+  .varied-card img{width:100%;height:150px;object-fit:cover;border-radius:8px}
+  .varied-info{display:flex;flex-direction:column;gap:6px}
+  .product-name{font-size:0.95rem;font-weight:700}
+  .product-price{color:var(--accent);font-weight:800}
+  .buy-btn{
+    background:var(--accent);color:var(--bg);border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700;
   }
 
-  .search-box {
-    margin: 15px;
-    display: flex;
+  /* cart button / modal */
+  .cart-btn{
+    position:fixed;right:18px;bottom:18px;background:var(--accent);color:var(--bg);padding:12px 14px;border-radius:12px;font-weight:800;
+    z-index:120;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.5);
+  }
+  .cart-count{background:#111;color:var(--accent);padding:2px 8px;border-radius:999px;margin-left:8px;font-weight:800}
+
+  /* modal */
+  #cartModal{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;padding:18px;overflow:auto;
+  }
+  #cartModal .modal-inner{max-width:980px;margin:18px auto;background:#0e0e0e;border-radius:12px;padding:16px}
+  #cartModal h2{margin-top:0;color:var(--accent)}
+  .cart-item{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#111;padding:10px;border-radius:10px;margin:10px 0}
+  .cart-item .left{display:flex;gap:10px;align-items:center}
+  .cart-item img{width:70px;height:70px;object-fit:cover;border-radius:8px}
+  .cart-item .meta{display:flex;flex-direction:column}
+  .cart-item .meta b{font-size:0.95rem}
+  .cart-item .actions{display:flex;gap:8px;align-items:center}
+  .qty-btn{background:#222;border:none;color:var(--accent);padding:6px 10px;border-radius:8px;cursor:pointer}
+  .remove-btn{background:var(--red);border:none;color:var(--accent);padding:6px 10px;border-radius:8px;cursor:pointer}
+  .clear-btn{background:var(--accent);border:none;color:var(--bg);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:800}
+  .checkout-btn{background:var(--red);border:none;color:var(--accent);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:800;margin-left:8px}
+
+  /* toast */
+  .toast{
+    position:fixed;right:20px;bottom:80px;background:var(--accent);color:var(--bg);padding:10px 14px;border-radius:8px;z-index:300;display:none;
   }
 
-  .search-box input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px 0 0 10px;
-    border: 1px solid #FFD700;
-    background: #222;
-    color: #fff;
-  }
-
-  .search-box button {
-    padding: 10px 15px;
-    border: none;
-    background: #FFD700;
-    color: #111;
-    border-radius: 0 10px 10px 0;
-    cursor: pointer;
-  }
-
-  .categories {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    padding: 10px;
-    background: #111;
-    scrollbar-width: none;
-  }
-
-  .categories::-webkit-scrollbar { display: none; }
-
-  .category {
-    flex: 0 0 auto;
-    background: #8B0000; /* vermelho escuro */
-    color: #FFD700; /* dourado */
-    padding: 8px 15px;
-    border-radius: 20px;
-    white-space: nowrap;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: 0.3s;
-  }
-
-  .category:hover {
-    transform: scale(1.05);
-    background: #FF0000;
-  }
-
-  /* Carrossel */
-  .carousel {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  .carousel::-webkit-scrollbar { display: none; }
-
-  .product {
-    min-width: 180px;
-    background: #222;
-    border-radius: 15px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
-    text-align: center;
-    padding: 10px;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-
-  .product:hover {
-    transform: scale(1.05);
-  }
-
-  .product img {
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .product h3 {
-    font-size: 1rem;
-    margin: 10px 0 5px;
-  }
-
-  .product p {
-    color: #FFD700;
-    font-weight: 600;
-  }
-
-  footer {
-    text-align: center;
-    padding: 15px;
-    color: #777;
-    background: #111;
-    margin-top: 30px;
+  /* responsive tweaks */
+  @media (max-width:520px){
+    .product img,.varied-card img{height:120px}
+    .carousel-btn{display:none}
   }
 </style>
 </head>
 <body>
 
-<header>
-  <a class="back-btn" onclick="window.history.back()">← Voltar</a>
-  <h1>Respect Style</h1>
-</header>
+  <header>
+    <button class="back-btn" onclick="window.history.back()">← Voltar</button>
+    <h1>Respect Style</h1>
+  </header>
 
-<div class="search-box">
-  <input type="text" id="searchInput" placeholder="Buscar produtos...">
-  <button onclick="searchProducts()">Buscar</button>
-</div>
+  <div class="search-box">
+    <input id="searchInput" placeholder="Buscar produtos..." oninput="searchProducts()" />
+    <button onclick="searchProducts()">Buscar</button>
+  </div>
 
-<div class="categories" id="categories">
-  <div class="category" onclick="filterCategory('todos')">Todos</div>
-  <div class="category" onclick="filterCategory('camisetas')">Camisetas</div>
-  <div class="category" onclick="filterCategory('bermudas')">Bermudas</div>
-  <div class="category" onclick="filterCategory('kimonos')">Kimonos</div>
-  <div class="category" onclick="filterCategory('acessorios')">Acessórios</div>
-</div>
+  <div class="categories" id="categories">
+    <div class="category" onclick="filterCategory('todos')">Todos</div>
+    <div class="category" onclick="filterCategory('camisetas')">Camisetas</div>
+    <div class="category" onclick="filterCategory('bermudas')">Bermudas</div>
+    <div class="category" onclick="filterCategory('kimonos')">Kimonos</div>
+    <div class="category" onclick="filterCategory('acessorios')">Acessórios</div>
+  </div>
 
-<!-- Carrossel de produtos -->
-<section class="carousel" id="products"></section>
+  <!-- CARROSSEL -->
+  <div class="carousel-container">
+    <button class="carousel-btn left" onclick="scrollCarousel(-300)">‹</button>
+    <div class="carousel" id="products"></div>
+    <button class="carousel-btn right" onclick="scrollCarousel(300)">›</button>
+  </div>
 
-<footer>
-  <p>© 2025 Respect Style. Todos os direitos reservados.</p>
-</footer>
+  <!-- TÍTULO seção variados -->
+  <h3 class="section-title">Produtos variados — estilo shop / shein</h3>
+
+  <!-- GRID de produtos variados -->
+  <section class="varied-products" id="variedProducts"></section>
+
+  <!-- CART BUTTON -->
+  <button class="cart-btn" onclick="toggleCart()">
+    Carrinho <span class="cart-count" id="cartCount">0</span>
+  </button>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">Produto adicionado</div>
+
+  <!-- CART MODAL -->
+  <div id="cartModal" aria-hidden="true">
+    <div class="modal-inner">
+      <button class="clear-btn" onclick="toggleCart()">Fechar</button>
+      <h2>Meu Carrinho</h2>
+      <div id="cartItems"></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+        <div>
+          <button class="clear-btn" onclick="clearCart()">Limpar Carrinho</button>
+        </div>
+        <div>
+          <strong style="color:var(--accent);">Total: R$ <span id="cartTotal">0.00</span></strong>
+          <button class="checkout-btn" onclick="checkout()">Finalizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="text-align:center;padding:18px;color:#777;background:transparent;margin-top:30px;">
+    © 2025 Respect Style. Todos os direitos reservados.
+  </footer>
 
 <script>
+/* ---------- Dados iniciais dos produtos ---------- */
 const produtos = [
-  { id: 1, nome: "Camiseta Respect Style", preco: 59.90, categoria: "camisetas", imagem: "https://via.placeholder.com/200x200?text=Camiseta+RS" },
-  { id: 2, nome: "Bermuda de Treino", preco: 79.90, categoria: "bermudas", imagem: "https://via.placeholder.com/200x200?text=Bermuda+RS" },
-  { id: 3, nome: "Kimono Oficial", preco: 249.90, categoria: "kimonos", imagem: "https://via.placeholder.com/200x200?text=Kimono+RS" },
-  { id: 4, nome: "Faixa Preta Premium", preco: 99.90, categoria: "acessorios", imagem: "https://via.placeholder.com/200x200?text=Faixa+RS" },
-  { id: 5, nome: "Camiseta Feminina Respect", preco: 64.90, categoria: "camisetas", imagem: "https://via.placeholder.com/200x200?text=Camiseta+Feminina" },
-  { id: 6, nome: "Kimono Kids", preco: 199.90, categoria: "kimonos", imagem: "https://via.placeholder.com/200x200?text=Kimono+Kids" }
+  { id: 1, nome: "Camiseta Respect Style", preco: 59.90, categoria: "camisetas", imagem: "https://via.placeholder.com/400x400?text=Camiseta+RS" },
+  { id: 2, nome: "Bermuda de Treino", preco: 79.90, categoria: "bermudas", imagem: "https://via.placeholder.com/400x400?text=Bermuda+RS" },
+  { id: 3, nome: "Kimono Oficial", preco: 249.90, categoria: "kimonos", imagem: "https://via.placeholder.com/400x400?text=Kimono+RS" },
+  { id: 4, nome: "Faixa Preta Premium", preco: 99.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Faixa+RS" },
+  { id: 5, nome: "Camiseta Feminina Respect", preco: 64.90, categoria: "camisetas", imagem: "https://via.placeholder.com/400x400?text=Camiseta+Feminina" },
+  { id: 6, nome: "Kimono Kids", preco: 199.90, categoria: "kimonos", imagem: "https://via.placeholder.com/400x400?text=Kimono+Kids" }
 ];
 
-function renderProducts(lista) {
+const produtosVaried = [
+  { id: 7, nome: "Protetor Bucal", preco: 29.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Protetor+Bucal" },
+  { id: 8, nome: "Luvas de Treino", preco: 49.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Luvas+Treino" },
+  { id: 9, nome: "Bandagem de Mão", preco: 19.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Bandagem+Mão" },
+  { id: 10, nome: "Caneleira", preco: 39.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Caneleira" },
+  { id: 11, nome: "Saco de Pancadas", preco: 299.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Saco+Pancadas" },
+  { id: 12, nome: "Protetor de Cabeça", preco: 89.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Protetor+Cabeca" },
+  { id: 13, nome: "Meia Esportiva", preco: 19.90, categoria: "acessorios", imagem: "https://via.placeholder.com/400x400?text=Meia+Esportiva" },
+  { id: 14, nome: "Short de Compressão", preco: 59.90, categoria: "bermudas", imagem: "https://via.placeholder.com/400x400?text=Short+Compressao" }
+];
+
+/* ---------- Render do carrossel ---------- */
+let currentDisplayed = produtos.slice(); // lista mostrada no carrossel
+
+function renderProducts(lista){
   const container = document.getElementById('products');
   container.innerHTML = '';
   lista.forEach(p => {
-    container.innerHTML += `
-      <div class="product">
-        <img src="${p.imagem}" alt="${p.nome}">
-        <h3>${p.nome}</h3>
-        <p>R$ ${p.preco.toFixed(2)}</p>
-      </div>
+    const el = document.createElement('div');
+    el.className = 'product';
+    el.innerHTML = `
+      <img src="${p.imagem}" alt="${p.nome}">
+      <h3>${p.nome}</h3>
+      <p>R$ ${p.preco.toFixed(2)}</p>
     `;
+    container.appendChild(el);
   });
 }
 
-function filterCategory(cat) {
-  if (cat === 'todos') renderProducts(produtos);
-  else renderProducts(produtos.filter(p => p.categoria === cat));
+/* ---------- Render dos produtos variados (grid) ---------- */
+function renderVariedProducts(lista = produtosVaried){
+  const container = document.getElementById('variedProducts');
+  container.innerHTML = '';
+  lista.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'varied-card';
+    card.innerHTML = `
+      <div>
+        <img src="${p.imagem}" alt="${p.nome}">
+      </div>
+      <div class="varied-info">
+        <div class="product-name">${p.nome}</div>
+        <div class="product-price">R$ ${p.preco.toFixed(2)}</div>
+      </div>
+      <div>
+        <button class="buy-btn" onclick="addToCart(${p.id})">Comprar</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
 }
 
-function searchProducts() {
-  const termo = document.getElementById('searchInput').value.toLowerCase();
-  const filtrados = produtos.filter(p => p.nome.toLowerCase().includes(termo));
-  renderProducts(filtrados);
+/* ---------- search e filter ---------- */
+function searchProducts(){
+  const termo = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  if(termo === ''){
+    // mostra todas no carrossel
+    currentDisplayed = produtos.slice();
+    renderProducts(currentDisplayed);
+    renderVariedProducts();
+    return;
+  }
+  const filtradosCar = produtos.filter(p => p.nome.toLowerCase().includes(termo));
+  const filtradosVar = produtosVaried.filter(p => p.nome.toLowerCase().includes(termo));
+  currentDisplayed = filtradosCar;
+  renderProducts(filtradosCar);
+  renderVariedProducts(filtradosVar);
 }
 
-renderProducts(produtos);
+function filterCategory(cat){
+  if(cat === 'todos'){
+    currentDisplayed = produtos.slice();
+    renderProducts(currentDisplayed);
+    renderVariedProducts();
+    return;
+  }
+  const carFilt = produtos.filter(p => p.categoria === cat);
+  const varFilt = produtosVaried.filter(p => p.categoria === cat);
+  currentDisplayed = carFilt.length ? carFilt : produtos.slice();
+  renderProducts(currentDisplayed);
+  renderVariedProducts(varFilt.length ? varFilt : produtosVaried);
+}
+
+/* ---------- carousel scroll ---------- */
+function scrollCarousel(offset){
+  document.getElementById('products').scrollBy({ left: offset, behavior: 'smooth' });
+}
+
+/* ---------- CARRINHO (localStorage) ---------- */
+function getCart(){ return JSON.parse(localStorage.getItem('carrinho') || '[]'); }
+function saveCart(cart){ localStorage.setItem('carrinho', JSON.stringify(cart)); updateCartCount(); renderCartItemsUI(); updateCartTotal(); }
+
+function findProductById(id){
+  return produtos.concat(produtosVaried).find(p => p.id === id);
+}
+
+function addToCart(id){
+  const product = findProductById(id);
+  if(!product) return alert('Produto inválido');
+  const cart = getCart();
+  const existing = cart.find(i => i.id === id);
+  if(existing) existing.qty += 1;
+  else cart.push({ id: product.id, nome: product.nome, preco: product.preco, imagem: product.imagem, qty: 1 });
+  saveCart(cart);
+  showToast(`${product.nome} adicionado ao carrinho`);
+}
+
+/* update count & toast & render itens no modal */
+function updateCartCount(){
+  const cart = getCart();
+  const totalQty = cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCount').innerText = totalQty;
+}
+function showToast(text){
+  const t = document.getElementById('toast');
+  t.innerText = text;
+  t.style.display = 'block';
+  setTimeout(()=> t.style.display = 'none',1400);
+}
+
+/* Modal/cart UI */
+let cartOpen = false;
+function toggleCart(){
+  cartOpen = !cartOpen;
+  const modal = document.getElementById('cartModal');
+  modal.style.display = cartOpen ? 'block' : 'none';
+  if(cartOpen) renderCartItemsUI();
+}
+
+function renderCartItemsUI(){
+  const container = document.getElementById('cartItems');
+  const cart = getCart();
+  container.innerHTML = '';
+  if(cart.length === 0){
+    container.innerHTML = '<p style="color:#bbb">Seu carrinho está vazio.</p>';
+    updateCartTotal();
+    return;
+  }
+  cart.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
+      <div class="left">
+        <img src="${item.imagem}" alt="${item.nome}">
+        <div class="meta">
+          <b>${item.nome}</b>
+          <small style="color:#bbb">R$ ${item.preco.toFixed(2)}</small>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+        <div style="min-width:24px;text-align:center">${item.qty}</div>
+        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+        <button class="remove-btn" onclick="removeItem(${item.id})">Remover</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+  updateCartTotal();
+}
+
+function changeQty(id, delta){
+  const cart = getCart();
+  const idx = cart.findIndex(i => i.id === id);
+  if(idx === -1) return;
+  cart[idx].qty += delta;
+  if(cart[idx].qty <= 0) cart.splice(idx,1);
+  saveCart(cart);
+}
+
+function removeItem(id){
+  let cart = getCart();
+  cart = cart.filter(i => i.id !== id);
+  saveCart(cart);
+}
+
+function clearCart(){
+  if(!confirm('Deseja limpar todo o carrinho?')) return;
+  localStorage.removeItem('carrinho');
+  updateCartCount();
+  renderCartItemsUI();
+  updateCartTotal();
+}
+
+function updateCartTotal(){
+  const cart = getCart();
+  const total = cart.reduce((s,i)=>s + (i.preco * i.qty),0);
+  document.getElementById('cartTotal').innerText = total.toFixed(2);
+}
+
+/* checkout simulado */
+function checkout(){
+  const cart = getCart();
+  if(cart.length === 0){ alert('Carrinho vazio'); return; }
+  // Simulação: mostra resumo e limpa carrinho
+  let summary = 'Pedido:\n\n';
+  cart.forEach(i => summary += `${i.nome} x${i.qty} — R$ ${(i.preco*i.qty).toFixed(2)}\n`);
+  summary += `\nTotal: R$ ${cart.reduce((s,i)=>s+(i.preco*i.qty),0).toFixed(2)}`;
+  alert(summary + '\n\n(Checkout simulado — implementar gateway/payment quando tiver backend.)');
+  clearCart();
+  toggleCart();
+}
+
+/* ---------- inicialização ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  renderProducts(currentDisplayed);
+  renderVariedProducts();
+  updateCartCount();
+  updateCartTotal();
+});
+
+/* expor funções ao escopo global para botões inline */
+window.scrollCarousel = scrollCarousel;
+window.addToCart = addToCart;
+window.filterCategory = filterCategory;
+window.searchProducts = searchProducts;
+window.toggleCart = toggleCart;
+window.clearCart = clearCart;
+window.changeQty = changeQty;
+window.removeItem = removeItem;
+window.checkout = checkout;
 </script>
-
 </body>
 </html>
