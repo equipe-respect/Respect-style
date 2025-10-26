@@ -67,6 +67,21 @@
 
   .hidden{display:none}
   input.input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--ring);background:#0b0b0b;color:var(--white)}
+
+  /* Modal Loja (iframe) */
+  #modalShop{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;padding:18px;align-items:center;justify-content:center;
+  }
+  #modalShop .inner{
+    width:min(1100px,98%);height:min(820px,96%);background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--ring);display:flex;flex-direction:column;
+  }
+  #modalShop .toolbar{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid var(--ring);gap:8px}
+  #modalShop .toolbar .left{display:flex;gap:8px;align-items:center}
+  #modalShop iframe{border:0;width:100%;flex:1;background:#fff}
+  #modalShop .note{font-size:13px;color:var(--muted)}
+
+  /* small helpers */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
@@ -81,7 +96,7 @@
     </div>
 
     <div class="top-actions" role="navigation">
-      <button class="btn" id="openShopBtn">Loja</button>
+      <button class="btn" id="openShopBtn" aria-haspopup="dialog" aria-controls="modalShop">Loja</button>
       <button class="btn" id="openSupport">Suporte</button>
       <div id="authArea"></div>
       <button class="btn warn" id="adminBlockBtn" title="Bloquear usuário">Bloquear Usuário</button>
@@ -123,9 +138,9 @@
                 <div class="swiper-wrapper" id="competitionsWrapper">
                   <!-- slides injetados via JS -->
                 </div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next" aria-label="Próximo"></div>
+                <div class="swiper-button-prev" aria-label="Anterior"></div>
+                <div class="swiper-pagination" aria-hidden="false"></div>
               </div>
             </div>
           </div>
@@ -223,13 +238,33 @@
     </div>
   </div>
 
+  <!-- Modal Loja (iframe) -->
+  <div id="modalShop" role="dialog" aria-modal="true" aria-hidden="true" class="hidden">
+    <div class="inner" role="document">
+      <div class="toolbar">
+        <div class="left">
+          <button id="closeShopBtn" class="btn" aria-label="Fechar loja">Fechar</button>
+          <span class="note">Loja embutida — usar o botão para abrir em nova aba se preferir</span>
+        </div>
+        <div>
+          <a id="openShopInNewTab" class="btn" href="../loja/index.html" target="_blank" rel="noopener">Abrir em nova aba</a>
+        </div>
+      </div>
+      <!-- iframe aponta para a loja local (relative path) -->
+      <iframe id="shopIframe" src="../loja/index.html" title="Loja Respect Style"></iframe>
+    </div>
+  </div>
+
+  <footer style="text-align:center;padding:18px;color:#777;background:transparent;margin-top:30px;">
+    © 2025 Respect Style. Todos os direitos reservados.
+  </footer>
+
   <!-- Swiper -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
   <script>
     /***********************
      * DATA SEED (demo)
-     * Você pode substituir por chamadas ao backend (fetch) depois
      ***********************/
     const COMPETITIONS = [
       { id:'c1', date:'2025-11-10', title:'Copa Estadual de Jiu-Jitsu', location:'Ginásio Municipal', link:'#' },
@@ -286,8 +321,7 @@
     }
 
     /***********************
-     * Basic auth (demo) — blocks attempts matching blocklist
-     * IMPORTANT: block server-side too for full effect.
+     * Basic auth (demo)
      ***********************/
     function getStoredUser(){ try { return JSON.parse(localStorage.getItem(LS_USER)); } catch(e){ return null } }
     function setStoredUser(u){ localStorage.setItem(LS_USER, JSON.stringify(u)); }
@@ -303,7 +337,7 @@
       }));
 
       // top actions
-      document.getElementById('openShopBtn').addEventListener('click', ()=>window.location.href='../loja/index.html');
+      document.getElementById('openShopBtn').addEventListener('click', openShopModal);
       document.getElementById('openSupport').addEventListener('click', ()=>window.open('https://wa.me/5599999999999','_blank'));
 
       // auth area
@@ -318,6 +352,11 @@
       document.getElementById('closeBlockDialog').addEventListener('click', ()=>document.getElementById('blockDialog').classList.add('hidden'));
       document.getElementById('doBlockBtn').addEventListener('click', doBlock);
 
+      // shop modal
+      document.getElementById('closeShopBtn').addEventListener('click', closeShopModal);
+      // update "abrir em nova aba" link dynamically (in case path changes)
+      document.getElementById('openShopInNewTab').href = '../loja/index.html';
+
       // render sections
       initCompetitionsSwiper();
       renderGraduates();
@@ -327,6 +366,15 @@
 
       // views default
       showView('dashboard');
+
+      // keyboard: ESC fecham modais
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape') {
+          closeShopModal();
+          document.getElementById('modalBg').classList.add('hidden');
+          document.getElementById('blockDialog').classList.add('hidden');
+        }
+      });
     });
 
     /***********************
@@ -366,7 +414,7 @@
       const pass = document.getElementById('authPass').value.trim();
       if(!email || !pass){ alert('Preencha e-mail e senha'); return; }
 
-      // BLOCK CHECK: por segurança bloqueamos logins que contenham entradas da blocklist (ex: "jm")
+      // BLOCK CHECK
       if(isBlocked(email) || isBlocked(pass) || isBlocked(email.split('@')[0])){
         alert('Este usuário foi bloqueado. Acesso negado.');
         document.getElementById('modalBg').classList.add('hidden');
@@ -405,8 +453,8 @@
      ***********************/
     let compSwiper;
     function initCompetitionsSwiper(){
-      // populate slides
       const wrap = document.getElementById('competitionsWrapper');
+      if(!wrap) return;
       wrap.innerHTML = '';
       COMPETITIONS.forEach(c => {
         const slide = document.createElement('div'); slide.className='swiper-slide';
@@ -419,14 +467,19 @@
         wrap.appendChild(slide);
       });
 
-      compSwiper = new Swiper('.mySwiper', {
-        slidesPerView: 1,
-        spaceBetween: 12,
-        loop: true,
-        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-        pagination: { el: '.swiper-pagination', clickable: true },
-        breakpoints: { 640:{ slidesPerView: 2 }, 1024:{ slidesPerView: 3 } }
-      });
+      // try init swiper only if Swiper library loaded
+      try {
+        compSwiper = new Swiper('.mySwiper', {
+          slidesPerView: 1,
+          spaceBetween: 12,
+          loop: true,
+          navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+          pagination: { el: '.swiper-pagination', clickable: true },
+          breakpoints: { 640:{ slidesPerView: 2 }, 1024:{ slidesPerView: 3 } }
+        });
+      } catch(e){
+        console.warn('Swiper init falhou (biblioteca ausente):', e);
+      }
     }
 
     /***********************
@@ -537,9 +590,7 @@
       const user = getStoredUser();
       if(!user && !confirm('Você não está logado. Deseja marcar presença como convidado?')) return;
       const when = new Date();
-      // aqui você poderia enviar para backend / Firestore
       alert('Presença marcada: ' + id + ' em ' + when.toLocaleString());
-      // pushActivity etc (omiti para brevidade)
     }
 
     /***********************
@@ -549,6 +600,46 @@
       const views = { dashboard:'view-dashboard', schedule:'view-schedule', notices:'view-notices', events:'view-events', graduates:'view-graduates', birthdays:'view-birthdays', links:'view-links' };
       for(const k in views) document.getElementById(views[k]).classList.toggle('hidden', k !== name);
     }
+
+    /***********************
+     * Modal Loja (iframe) controls
+     ***********************/
+    function openShopModal(){
+      const modal = document.getElementById('modalShop');
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      // lazy load iframe src if needed (already set) and try to resize
+      resizeShopIframe();
+      // clicking outside inner should close
+      setTimeout(()=> {
+        modal.addEventListener('click', onShopBackdropClick);
+      }, 50);
+    }
+    function closeShopModal(){
+      const modal = document.getElementById('modalShop');
+      if(!modal) return;
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden','true');
+      modal.removeEventListener('click', onShopBackdropClick);
+    }
+    function onShopBackdropClick(e){
+      const inner = document.querySelector('#modalShop .inner');
+      if(!inner.contains(e.target)) closeShopModal();
+    }
+    function resizeShopIframe(){
+      const iframe = document.getElementById('shopIframe');
+      if(!iframe) return;
+      // try to set height to viewport minus toolbar
+      const inner = document.querySelector('#modalShop .inner');
+      if(inner){
+        const toolbar = document.querySelector('#modalShop .toolbar');
+        const height = Math.min(window.innerHeight - 120, 820);
+        inner.style.height = height + 'px';
+      }
+    }
+    window.addEventListener('resize', resizeShopIframe);
 
     /***********************
      * Utilities
@@ -564,7 +655,7 @@
     /***********************
      * Expose for debugging in console
      ***********************/
-    window._respect = { addBlocked, getBlockedList, isBlocked, setStoredUser, getStoredUser, clearUser };
+    window._respect = { addBlocked, getBlockedList, isBlocked, setStoredUser, getStoredUser, clearUser, openShopModal, closeShopModal };
   </script>
 </body>
 </html>
